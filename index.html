@@ -2,251 +2,169 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>ryan-the-zilla.github.io</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { overflow: hidden; height: 100%; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{overflow:hidden;height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif}
 
-  /* === FAKE ERROR PAGE === */
-  .error-page {
-    font-family: 'Segoe UI', -apple-system, sans-serif;
-    background: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px 20px;
-    color: #333;
+  /* === SAFARI ERROR === */
+  .safari-error{
+    background:#fff;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:40px 20px;color:#1d1d1f;
   }
-  .error-page.hidden { display: none; }
+  .safari-error.hidden{display:none}
+  .sf-icon{font-size:52px;margin-bottom:16px;opacity:0.6}
+  .sf-title{font-size:20px;font-weight:600;color:#1d1d1f;margin-bottom:4px;letter-spacing:-0.2px}
+  .sf-url{font-size:13px;color:#86868b;margin-bottom:20px}
+  .sf-code{font-size:14px;color:#86868b;font-family:'SF Mono',Menlo,monospace;margin-bottom:6px}
+  .sf-body{font-size:14px;color:#86868b;line-height:1.6;max-width:380px}
+  .sf-body strong{color:#1d1d1f}
+  .sf-detail{margin-top:24px;font-size:12px;color:#aeaeb2;font-family:'SF Mono',Menlo,monospace}
 
-  .err-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
-    opacity: 0.7;
-  }
-  .err-title {
-    font-size: 20px;
-    font-weight: 400;
-    color: #333;
-    margin-bottom: 8px;
-    transition: all 0.8s ease;
-  }
-  .err-code {
-    font-size: 14px;
-    color: #666;
-    font-family: 'Courier New', monospace;
-    margin-bottom: 24px;
-    transition: all 0.8s ease;
-  }
-  .err-detail {
-    font-size: 13px;
-    color: #888;
-    line-height: 1.8;
-    max-width: 400px;
-  }
-  .err-detail strong { color: #555; }
-  .err-suggestion {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #aaa;
-  }
+  /* Glitch */
+  .sf-title.glitch{animation:g 0.3s ease}
+  @keyframes g{0%{transform:translate(0)}20%{transform:translate(-3px,2px);filter:hue-rotate(90deg)}40%{transform:translate(3px,-1px)}60%{transform:translate(-1px,-2px);filter:hue-rotate(180deg)}80%{transform:translate(2px,1px)}100%{transform:translate(0);filter:none}}
+  .shake{animation:sh 0.4s ease}
+  @keyframes sh{0%,100%{transform:translate(0)}10%{transform:translate(-4px,2px)}30%{transform:translate(4px,-2px)}50%{transform:translate(-2px,4px)}70%{transform:translate(2px,-4px)}90%{transform:translate(-3px,1px)}}
 
-  /* Glitch effects */
-  .err-title.glitch {
-    animation: glitch 0.3s ease;
-  }
-  @keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-3px, 2px); filter: hue-rotate(90deg); }
-    40% { transform: translate(3px, -1px); }
-    60% { transform: translate(-1px, -2px); filter: hue-rotate(180deg); }
-    80% { transform: translate(2px, 1px); }
-    100% { transform: translate(0); filter: none; }
-  }
-  .err-code.glitch-text {
-    color: #c42b1c;
-  }
-  .err-red { color: #c42b1c !important; }
-  .err-fade { opacity: 0.5; transition: opacity 0.5s; }
+  /* === MACOS DIALOG === */
+  .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    z-index:10;flex-direction:column;align-items:center;justify-content:center}
+  .overlay.show{display:flex}
 
-  /* === UNINSTALL OVERLAY === */
-  .overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 10;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .dialog{
+    background:rgba(246,246,246,0.97);border-radius:12px;
+    box-shadow:0 24px 80px rgba(0,0,0,0.25),0 0 0 0.5px rgba(0,0,0,0.1);
+    max-width:420px;width:88%;overflow:hidden;animation:dialogIn 0.25s cubic-bezier(0.16,1,0.3,1);
   }
-  .overlay.show { display: flex; }
+  @keyframes dialogIn{from{transform:scale(1.05);opacity:0}to{transform:scale(1);opacity:1}}
 
-  .dialog {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
-    max-width: 460px;
-    width: 90%;
-    overflow: hidden;
-    animation: popIn 0.2s ease-out;
+  .dlg-header{padding:20px 20px 4px;display:flex;align-items:flex-start;gap:14px}
+  .dlg-icon{font-size:40px;flex-shrink:0;line-height:1}
+  .dlg-body{flex:1;padding:16px 20px 0}
+  .dlg-title{font-size:14px;font-weight:600;color:#1d1d1f;margin-bottom:4px}
+  .dlg-desc{font-size:13px;color:#86868b;line-height:1.55}
+  .dlg-desc strong{color:#1d1d1f}
+  .dlg-desc .warn{color:#d32f2f;font-weight:500}
+  .dlg-desc .soft{color:#aeaeb2}
+
+  .dlg-buttons{padding:14px 20px 18px;display:flex;gap:8px;justify-content:flex-end}
+  .btn{
+    padding:6px 16px;font-size:13px;font-family:inherit;
+    border:none;border-radius:8px;cursor:pointer;
+    transition:all 0.15s;font-weight:400;letter-spacing:-0.1px;
   }
-  @keyframes popIn {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+  .btn-default{background:#e8e8e8;color:#1d1d1f}
+  .btn-default:hover{background:#d8d8d8}
+  .btn-default:active{background:#c8c8c8}
+  .btn-red{background:#d32f2f;color:#fff}
+  .btn-red:hover{background:#b71c1c}
+  .btn-red:active{background:#8e0000}
+
+  .progress-wrap{padding:0 20px 16px;display:none}
+  .progress-wrap.show{display:block}
+  .progress-track{width:100%;height:4px;background:#e0e0e0;border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:#007aff;border-radius:2px;width:0%;transition:width 0.3s}
+  .progress-txt{font-size:12px;color:#86868b;margin-top:8px;line-height:1.4}
+
+  .panic-wrap{display:none;padding:0 20px 14px}
+  .panic-wrap.show{display:flex;gap:8px;justify-content:flex-end}
+
+  /* === REVEAL === */
+  .reveal{
+    display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    z-index:100;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:20px;overflow:hidden;
   }
+  .reveal.show{display:flex;animation:rvIn 1.2s ease-out}
+  @keyframes rvIn{from{opacity:0}to{opacity:1}}
 
-  .dialog-header {
-    padding: 18px 22px 14px;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-  }
-  .dialog-icon { font-size: 32px; flex-shrink: 0; line-height: 1; }
-  .dialog-text { flex: 1; }
-  .dialog-title { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; font-family: 'Segoe UI', sans-serif; }
-  .dialog-desc { font-size: 13px; color: #555; line-height: 1.6; font-family: 'Segoe UI', sans-serif; }
-  .dialog-desc strong { color: #1a1a1a; }
-  .dialog-desc .warn { color: #c42b1c; font-weight: 600; }
-  .dialog-desc .soft { color: #888; }
+  .rv-bg{position:absolute;top:0;left:0;width:100%;height:100%;
+    background:linear-gradient(135deg,#1a0a00 0%,#2d1810 30%,#4a2520 60%,#1a0a00 100%)}
+  .rv-glow{position:absolute;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,200,50,0.15) 0%,transparent 70%);
+    top:50%;left:50%;transform:translate(-50%,-60%);animation:pulse 4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:translate(-50%,-60%) scale(1);opacity:0.8}50%{transform:translate(-50%,-60%) scale(1.3);opacity:1}}
+  .rv-glow2{position:absolute;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,100,50,0.1) 0%,transparent 70%);
+    top:60%;left:40%;animation:pulse2 5s ease-in-out infinite}
+  @keyframes pulse2{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.4)}}
 
-  .dialog-buttons {
-    padding: 12px 22px 18px;
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
-  .btn {
-    padding: 7px 20px;
-    font-size: 13px;
-    font-family: 'Segoe UI', sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    background: #fff;
-    color: #333;
-    transition: background 0.15s;
-  }
-  .btn:hover { background: #f0f0f0; }
-  .btn-primary { background: #0078d4; color: #fff; border-color: #0078d4; }
-  .btn-primary:hover { background: #006cbd; }
-  .btn-danger { background: #c42b1c; color: #fff; border-color: #c42b1c; }
-  .btn-danger:hover { background: #b4271a; }
+  .rv-content{position:relative;z-index:2}
+  .rv-emoji{font-size:64px;margin-bottom:16px;animation:bob 3s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .rv-title{font-size:1.8em;font-weight:700;color:#ffd700;margin-bottom:12px;
+    text-shadow:0 0 40px rgba(255,200,50,0.3)}
+  .rv-text{color:#c9a87c;font-size:1em;line-height:1.9;max-width:380px;font-weight:300}
+  .rv-text .gold{color:#ffd700;font-weight:500}
+  .rv-text .warm{color:#e8d5b5}
+  .rv-text .sincere{color:#fff;opacity:0.85;font-weight:400}
+  .rv-footer{margin-top:28px;color:#8a6d4b;font-size:0.85em;font-style:italic}
+  .rv-trap{margin-top:20px;color:#5a4a3a;font-size:0.8em;display:none;cursor:pointer}
+  .rv-trap.show{display:block}
+  .rv-trap-msg{color:#ffd700;margin-top:6px;font-size:0.85em}
 
-  .progress-wrap { padding: 0 22px 16px; display: none; }
-  .progress-wrap.show { display: block; }
-  .progress-outer { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
-  .progress-inner { height: 100%; background: #0078d4; border-radius: 3px; width: 0%; transition: width 0.3s; }
-  .progress-label { font-size: 12.5px; color: #666; margin-top: 10px; line-height: 1.5; font-family: 'Segoe UI', sans-serif; }
+  .sparkle{position:fixed;z-index:101;pointer-events:none;border-radius:50%;
+    animation:sparkleAnim linear forwards}
+  @keyframes sparkleAnim{0%{opacity:1;transform:translateY(0) scale(1)}
+    100%{opacity:0;transform:translateY(60vh) scale(0)}}
 
-  .panic-buttons { display: none; padding: 0 22px 14px; }
-  .panic-buttons.show { display: flex; gap: 8px; justify-content: flex-end; }
+  .confetti{position:fixed;top:-10px;z-index:102;pointer-events:none;animation:cFall linear forwards}
+  @keyframes cFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-  /* Reveal */
-  .reveal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #0a0a0a;
-    z-index: 100;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-  }
-  .reveal-overlay.show { display: flex; animation: fadeBlack 0.8s ease-out; }
-  @keyframes fadeBlack { from { opacity: 0; } to { opacity: 1; } }
-
-  .rv-emoji { font-size: 60px; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .rv-title { font-family: 'Segoe UI', sans-serif; font-size: 2em; font-weight: 700; color: #fff; margin-bottom: 10px; }
-  .rv-sub { color: #999; font-size: 1.05em; line-height: 1.8; max-width: 420px; font-family: 'Segoe UI', sans-serif; }
-  .rv-sub .acc { color: #ffd700; font-weight: 600; }
-  .rv-sub .sincere { color: #ccc; }
-  .rv-footer { margin-top: 30px; color: #555; font-size: 0.9em; }
-  .rv-trap { margin-top: 20px; color: #555; font-size: 0.85em; display: none; cursor: pointer; }
-  .rv-trap.show { display: block; }
-  .rv-trap-msg { color: #ff4444; margin-top: 8px; }
-
-  .confetti { position: fixed; top: -10px; z-index: 101; pointer-events: none; animation: cFall linear forwards; }
-  @keyframes cFall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-
-  /* Screen shake */
-  .shake { animation: shake 0.5s ease; }
-  @keyframes shake {
-    0%,100% { transform: translate(0); }
-    10% { transform: translate(-4px, 2px); }
-    30% { transform: translate(4px, -2px); }
-    50% { transform: translate(-2px, 4px); }
-    70% { transform: translate(2px, -4px); }
-    90% { transform: translate(-3px, 1px); }
-  }
-
-  @media (max-width: 600px) {
-    .dialog { max-width: 95%; }
-    .rv-title { font-size: 1.5em; }
-    .error-page { padding: 30px 16px; }
-    .err-icon { font-size: 48px; }
-    .err-title { font-size: 17px; }
+  @media(max-width:600px){
+    .dialog{max-width:95%;border-radius:14px}
+    .rv-title{font-size:1.4em}
+    .sf-title{font-size:17px}
   }
 </style>
 </head>
 <body>
 
-<!-- Phase 0: Fake Chrome Error Page -->
-<div class="error-page" id="errorPage">
-  <div class="err-icon" id="errIcon">😕</div>
-  <div class="err-title" id="errTitle">Deze site kan niet worden bereikt</div>
-  <div class="err-code" id="errCode">ERR_CONNECTION_REFUSED</div>
-  <div class="err-detail" id="errDetail">
-    <strong>ryan-the-zilla.github.io</strong> heeft de verbinding geweigerd.<br>
-    Probeer:
-    <ul style="text-align:left; margin: 12px 0 0 20px; list-style: disc;">
-      <li>De pagina opnieuw laden</li>
-      <li>Je verbinding te controleren</li>
-      <li>De site later opnieuw te proberen</li>
-    </ul>
+<!-- Safari Error -->
+<div class="safari-error" id="errorPage">
+  <div class="sf-icon" id="sfIcon">😕</div>
+  <div class="sf-title" id="sfTitle">Deze site kan niet worden bereikt</div>
+  <div class="sf-url">ryan-the-zilla.github.io</div>
+  <div class="sf-code" id="sfCode">ERR_CONNECTION_REFUSED</div>
+  <div class="sf-body" id="sfBody">
+    <strong>ryan-the-zilla.github.io</strong> heeft de verbinding geweigerd.
   </div>
-  <div class="err-suggestion" id="errSuggestion">Foutdetails: CONNECTION_REFUSED — Poort 443</div>
+  <div class="sf-detail" id="sfDetail">Foutdetails: CONNECTION_REFUSED — Poort 443</div>
 </div>
 
-<!-- Phase 1: Delete dialog -->
+<!-- macOS Dialog: Delete -->
 <div class="overlay" id="p1">
   <div class="dialog">
-    <div class="dialog-header">
-      <div class="dialog-icon">🗑️</div>
-      <div class="dialog-text">
-        <div class="dialog-title">Ryany verwijderen</div>
-        <div class="dialog-desc">
+    <div class="dlg-header">
+      <div class="dlg-icon">🗑️</div>
+      <div class="dlg-body">
+        <div class="dlg-title">Ryany verwijderen</div>
+        <div class="dlg-desc">
           Weet je zeker dat je <strong>Ryany</strong> uit het systeem wilt verwijderen?<br><br>
-          Type: <strong>Zus (19)</strong><br>
-          Rol: <strong>Liefste zus ter wereld</strong><br>
+          Soort: <strong>Zus (19)</strong><br>
+          Rol: <strong id="p1Rol">Liefste zus ter wereld</strong><br>
           <span class="warn">Deze actie kan niet ongedaan worden gemaakt.</span>
         </div>
       </div>
     </div>
-    <div class="dialog-buttons">
-      <button class="btn btn-primary" onclick="cancelDelete()">Annuleren</button>
-      <button class="btn btn-danger" onclick="startDelete()">Verwijderen</button>
+    <div class="dlg-buttons">
+      <button class="btn btn-default" onclick="cancelDelete()">Annuleren</button>
+      <button class="btn btn-red" onclick="startDelete()">Verwijderen</button>
     </div>
   </div>
 </div>
 
-<!-- Phase 2a: Cancelled -->
+<!-- Cancelled -->
 <div class="overlay" id="p2">
   <div class="dialog">
-    <div class="dialog-header">
-      <div class="dialog-icon">✅</div>
-      <div class="dialog-text">
-        <div class="dialog-title">Geannuleerd</div>
-        <div class="dialog-desc" id="cancelText">
+    <div class="dlg-header">
+      <div class="dlg-icon" id="p2Icon">✅</div>
+      <div class="dlg-body">
+        <div class="dlg-title">Geannuleerd</div>
+        <div class="dlg-desc" id="cancelText">
           <strong>Ryany</strong> wordt niet verwijderd.<br>
           Goede keuze.
         </div>
@@ -255,345 +173,259 @@
   </div>
 </div>
 
-<!-- Phase 2b: Something is off -->
+<!-- Cancelled → system override -->
 <div class="overlay" id="p2b">
   <div class="dialog">
-    <div class="dialog-header">
-      <div class="dialog-icon">⚠️</div>
-      <div class="dialog-text">
-        <div class="dialog-title">Wacht even.</div>
-        <div class="dialog-desc">
-          Je drukte op annuleren, maar het systeem heeft iets gevonden.<br><br>
-          <strong>Ryany</strong> heeft een beveiligingsstatus.<br>
-          <span class="soft">Verwijdering wordt uitgevoerd om onbekende reden.</span>
+    <div class="dlg-header">
+      <div class="dlg-icon">⚠️</div>
+      <div class="dlg-body">
+        <div class="dlg-title">Systeemwaarschuwing</div>
+        <div class="dlg-desc">
+          Je drukte op annuleren, maar <strong>Ryany</strong> heeft een beveiligingsstatus.<br>
+          <span class="soft">Verwijdering wordt uitgevoerd.</span>
         </div>
       </div>
     </div>
     <div class="progress-wrap show">
-      <div class="progress-outer"><div class="progress-inner" id="pbar"></div></div>
-      <div class="progress-label" id="progressLabel">Voorbereiden...</div>
+      <div class="progress-track"><div class="progress-fill" id="pbar"></div></div>
+      <div class="progress-txt" id="progressLabel">Voorbereiden...</div>
     </div>
-    <div class="panic-buttons" id="panicBtns">
-      <button class="btn btn-primary" id="stopBtn" onclick="tryStop()">⏹ Stoppen</button>
+    <div class="panic-wrap" id="panicBtns">
+      <button class="btn btn-default" id="stopBtn" onclick="tryStop()">Annuleren</button>
     </div>
   </div>
 </div>
 
-<!-- Phase 3: Delete clicked -->
+<!-- Delete route -->
 <div class="overlay" id="p3">
   <div class="dialog">
-    <div class="dialog-header">
-      <div class="dialog-icon">🗑️</div>
-      <div class="dialog-text">
-        <div class="dialog-title">Bezig met verwijderen...</div>
-        <div class="dialog-desc">
+    <div class="dlg-header">
+      <div class="dlg-icon">🗑️</div>
+      <div class="dlg-body">
+        <div class="dlg-title">Bezig met verwijderen...</div>
+        <div class="dlg-desc">
           <strong>Ryany</strong> wordt permanent verwijderd.<br>
           <span class="warn">Sluit dit venster niet.</span>
         </div>
       </div>
     </div>
     <div class="progress-wrap show">
-      <div class="progress-outer"><div class="progress-inner" id="pbar3"></div></div>
-      <div class="progress-label" id="progressLabel3">Voorbereiden...</div>
+      <div class="progress-track"><div class="progress-fill" id="pbar3"></div></div>
+      <div class="progress-txt" id="progressLabel3">Voorbereiden...</div>
     </div>
-    <div class="panic-buttons" id="panicBtns3">
-      <button class="btn btn-primary" id="stopBtn3" onclick="tryStop3()">Annuleren</button>
+    <div class="panic-wrap" id="panicBtns3">
+      <button class="btn btn-default" id="stopBtn3" onclick="tryStop3()">Annuleren</button>
     </div>
   </div>
 </div>
 
 <!-- Reveal -->
-<div class="reveal-overlay" id="reveal">
-  <div class="rv-emoji">🏆</div>
-  <div class="rv-title">Verwijdering mislukt.</div>
-  <div class="rv-sub" id="revealText"></div>
-  <div class="rv-footer">— Je broer (helaas)</div>
-  <div class="rv-trap" id="trap">klik ergens om te sluiten
-    <div class="rv-trap-msg" id="trapMsg"></div>
+<div class="reveal" id="reveal">
+  <div class="rv-bg"></div>
+  <div class="rv-glow"></div>
+  <div class="rv-glow2"></div>
+  <div class="rv-content">
+    <div class="rv-emoji">🏆</div>
+    <div class="rv-title">Verwijdering mislukt.</div>
+    <div class="rv-text" id="revealText"></div>
+    <div class="rv-footer">— Je broer (helaas)</div>
+    <div class="rv-trap" id="trap">klik ergens om te sluiten
+      <div class="rv-trap-msg" id="trapMsg"></div>
+    </div>
   </div>
 </div>
 
 <script>
-// === SOUND ENGINE ===
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let actx;
-function initAudio() { if (!actx) actx = new AudioCtx(); }
-function beep(freq, dur, type='square', vol=0.08) {
-  if (!actx) return;
-  const o = actx.createOscillator(), g = actx.createGain();
-  o.type = type; o.frequency.value = freq; g.gain.value = vol;
-  o.connect(g); g.connect(actx.destination);
-  o.start(); g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur/1000);
-  o.stop(actx.currentTime + dur/1000);
-}
-function sndGlitch() { beep(150+Math.random()*100, 60, 'sawtooth', 0.06); }
-function sndDialog() { beep(400, 60, 'sine', 0.06); }
-function sndCancel() { beep(600, 80, 'sine', 0.08); setTimeout(()=>beep(800, 60, 'sine', 0.06), 100); }
-function sndUneasy() { beep(300, 180, 'sawtooth', 0.05); }
-function sndProgress() { beep(500+Math.random()*200, 40, 'sine', 0.04); }
-function sndWarn() { beep(250, 120, 'sawtooth', 0.07); }
-function sndFail() { for(let i=0;i<3;i++) setTimeout(()=>beep(300-i*60, 60, 'square', 0.08), i*80); }
-function sndPanic() { beep(800, 50, 'square', 0.1); }
-function sndReveal() { beep(523,80,'sine',0.1); setTimeout(()=>beep(659,80,'sine',0.1),100); setTimeout(()=>beep(784,100,'sine',0.12),200); setTimeout(()=>beep(1047,120,'sine',0.15),300); }
-function sndTrap() { beep(200, 60, 'square', 0.06); }
-function sndPause() { beep(200, 300, 'sine', 0.03); }
-function sndMorph() { for(let i=0;i<4;i++) setTimeout(()=>beep(200+i*80, 50, 'sawtooth', 0.04), i*60); }
-document.addEventListener('click', initAudio, { once: true });
-document.addEventListener('keydown', initAudio, { once: true });
+// === SOUND ===
+const AC=window.AudioContext||window.webkitAudioContext;let ax;
+function ia(){if(!ax)ax=new AC()}
+function bp(f,d,t='square',v=0.08){if(!ax)return;const o=ax.createOscillator(),g=ax.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ax.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,ax.currentTime+d/1000);o.stop(ax.currentTime+d/1000)}
+function sGlitch(){bp(150+Math.random()*100,60,'sawtooth',0.06)}
+function sDialog(){bp(400,60,'sine',0.06)}
+function sCancel(){bp(600,80,'sine',0.08);setTimeout(()=>bp(800,60,'sine',0.06),100)}
+function sUneasy(){bp(300,180,'sawtooth',0.05)}
+function sProg(){bp(500+Math.random()*200,40,'sine',0.04)}
+function sWarn(){bp(250,120,'sawtooth',0.07)}
+function sFail(){for(let i=0;i<3;i++)setTimeout(()=>bp(300-i*60,60,'square',0.08),i*80)}
+function sPanic(){bp(800,50,'square',0.1)}
+function sReveal(){bp(523,80,'sine',0.1);setTimeout(()=>bp(659,80,'sine',0.1),100);setTimeout(()=>bp(784,100,'sine',0.12),200);setTimeout(()=>bp(1047,120,'sine',0.15),300)}
+function sTrap(){bp(200,60,'square',0.06)}
+function sPause(){bp(200,300,'sine',0.03)}
+function sMorph(){for(let i=0;i<4;i++)setTimeout(()=>bp(200+i*80,50,'sawtooth',0.04),i*60)}
+document.addEventListener('click',ia,{once:true});
+document.addEventListener('keydown',ia,{once:true});
 
-function show(id) {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
-  const el = document.getElementById(id);
-  if (el) el.classList.add('show');
-}
+function show(id){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show'));const e=document.getElementById(id);if(e)e.classList.add('show')}
 
-// === ERROR PAGE MORPH ===
-async function glitchEl(id) {
-  const el = document.getElementById(id);
-  el.classList.add('glitch');
-  sndGlitch();
-  await new Promise(r => setTimeout(r, 300));
-  el.classList.remove('glitch');
-}
+// === ERROR MORPH ===
+async function glitchEl(id){const e=document.getElementById(id);e.classList.add('glitch');sGlitch();await new Promise(r=>setTimeout(r,300));e.classList.remove('glitch')}
 
-async function runErrorMorph() {
-  const title = document.getElementById('errTitle');
-  const code = document.getElementById('errCode');
-  const detail = document.getElementById('errDetail');
-  const suggestion = document.getElementById('errSuggestion');
-  const icon = document.getElementById('errIcon');
+async function runErrorMorph(){
+  const t=document.getElementById('sfTitle'),c=document.getElementById('sfCode'),
+    b=document.getElementById('sfBody'),d=document.getElementById('sfDetail'),
+    ic=document.getElementById('sfIcon');
 
-  // Phase 0: Normal error, she reads it (~3s)
-  await new Promise(r => setTimeout(r, 3000));
+  await new Promise(r=>setTimeout(r,3000));
 
-  // First micro-glitch — barely noticeable
-  await glitchEl('errTitle');
-  code.textContent = 'ERR_CONNECTION_REFUSED';
-  await new Promise(r => setTimeout(r, 1500));
+  // Micro-glitch
+  await glitchEl('sfTitle');
+  await new Promise(r=>setTimeout(r,1500));
 
-  // Glitch 2 — title flickers
-  await glitchEl('errTitle');
-  title.textContent = 'Deze site kan niet worden bereikt.';
-  await glitchEl('errTitle');
-  title.textContent = 'Deze zus kan niet worden bereikt';
-  sndMorph();
-  await new Promise(r => setTimeout(r, 1200));
+  // "site" → "zus"
+  await glitchEl('sfTitle');
+  t.textContent='Deze zus kan niet worden bereikt';
+  sMorph();
+  await new Promise(r=>setTimeout(r,1200));
 
-  // She's confused now. Revert.
-  await glitchEl('errTitle');
-  title.textContent = 'Deze site kan niet worden bereikt';
-  code.textContent = 'ERR_CONNECTION_REFUSED';
-  await new Promise(r => setTimeout(r, 2000));
+  // Revert
+  await glitchEl('sfTitle');
+  t.textContent='Deze site kan niet worden bereikt';
+  c.textContent='ERR_CONNECTION_REFUSED';
+  await new Promise(r=>setTimeout(r,2000));
 
-  // Glitch 3 — bigger, error code changes
-  document.body.classList.add('shake');
-  sndGlitch();
-  await new Promise(r => setTimeout(r, 400));
+  // Bigger glitch
+  document.body.classList.add('shake');sGlitch();
+  await new Promise(r=>setTimeout(r,400));
+  document.body.classList.remove('shake');
+  c.textContent='ERR_SISTE_NOT_FOUND';c.style.color='#d32f2f';
+  await new Promise(r=>setTimeout(r,1000));
+
+  d.textContent='Foutdetails: SUBJEKT_RYANY — Verwijdering in behandeling';
+  d.style.color='#d32f2f';
+  sMorph();
+  await new Promise(r=>setTimeout(r,1500));
+
+  ic.textContent='⚠️';
+  await new Promise(r=>setTimeout(r,800));
+
+  // Full morph
+  document.body.classList.add('shake');sGlitch();sGlitch();
+  t.textContent='Ryany verwijderen?';
+  t.style.color='#d32f2f';t.style.fontWeight='600';
+  c.textContent='VERWIJDEREN_BEVESTIGEN';
+  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#d32f2f;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+  await new Promise(r=>setTimeout(r,500));
   document.body.classList.remove('shake');
 
-  code.textContent = 'ERR_SISTE_NOT_FOUND';
-  code.classList.add('glitch-text');
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r=>setTimeout(r,1500));
 
-  // Suggestion changes
-  suggestion.textContent = 'Foutdetails: SUBJEKT_RYANY — Verwijdering in behandeling';
-  suggestion.style.color = '#c42b1c';
-  sndMorph();
-  await new Promise(r => setTimeout(r, 1500));
-
-  // Icon changes
-  icon.textContent = '⚠️';
-  await new Promise(r => setTimeout(r, 800));
-
-  // Big morph — title fully changes
-  document.body.classList.add('shake');
-  sndGlitch(); sndGlitch();
-  title.textContent = 'Ryany verwijderen?';
-  title.style.color = '#c42b1c';
-  title.style.fontWeight = '600';
-  code.textContent = 'VERWIJDEREN_BEVESTIGEN';
-  detail.innerHTML = '<strong>Ryany</strong> is gevonden in het systeem.<br>Type: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#c42b1c;font-weight:600;">Deze actie kan niet ongedaan worden gemaakt.</span>';
-  await new Promise(r => setTimeout(r, 500));
+  // "irritanste" glitch
+  document.body.classList.add('shake');sGlitch();
+  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong style="color:#d32f2f;">Irritanste zus ter wereld</strong><br><br><span style="color:#d32f2f;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+  await new Promise(r=>setTimeout(r,800));
   document.body.classList.remove('shake');
+  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#d32f2f;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+  await new Promise(r=>setTimeout(r,1200));
 
-  // Wait — she's reading, realizing what's happening
-  await new Promise(r => setTimeout(r, 1500));
-
-  // Glitch: "liefste" → "irritanste" → back to "liefste"
-  document.body.classList.add('shake');
-  sndGlitch();
-  detail.innerHTML = '<strong>Ryany</strong> is gevonden in het systeem.<br>Type: <strong>Zus (19)</strong><br>Rol: <strong style="color:#c42b1c;">Irritanste zus ter wereld</strong><br><br><span style="color:#c42b1c;font-weight:600;">Deze actie kan niet ongedaan worden gemaakt.</span>';
-  await new Promise(r => setTimeout(r, 800));
-  document.body.classList.remove('shake');
-  // Back to sweet
-  detail.innerHTML = '<strong>Ryany</strong> is gevonden in het systeem.<br>Type: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#c42b1c;font-weight:600;">Deze actie kan niet ongedaan worden gemaakt.</span>';
-  await new Promise(r => setTimeout(r, 1200));
-
-  // Buttons appear — the error page BECOMES the dialog
-  const btns = document.createElement('div');
-  btns.style.cssText = 'margin-top:24px; display:flex; gap:8px; justify-content:center;';
-  btns.innerHTML = '<button class="btn btn-primary" onclick="cancelDelete()" style="padding:8px 24px; font-size:14px;">Annuleren</button><button class="btn btn-danger" onclick="startDelete()" style="padding:8px 24px; font-size:14px;">Verwijderen</button>';
-  detail.appendChild(btns);
-
-  // Hide the old suggestion
-  suggestion.style.display = 'none';
-
-  sndDialog();
+  // Buttons
+  const btns=document.createElement('div');
+  btns.style.cssText='margin-top:24px;display:flex;gap:8px;justify-content:center;';
+  btns.innerHTML='<button class="btn btn-default" onclick="cancelDelete()" style="padding:8px 20px;font-size:14px;">Annuleren</button><button class="btn btn-red" onclick="startDelete()" style="padding:8px 20px;font-size:14px;">Verwijderen</button>';
+  b.appendChild(btns);
+  d.style.display='none';
+  sDialog();
 }
 
-// === CANCEL ROUTE ===
-async function cancelDelete() {
-  sndCancel();
-  show('p2');
-
-  await new Promise(r => setTimeout(r, 2000));
-
-  sndPause();
-  document.getElementById('cancelText').innerHTML = '<strong>Ryany</strong> wordt niet verwijderd.<br><span class="delay">Goede keuze.</span>';
-  await new Promise(r => setTimeout(r, 1800));
-
-  sndUneasy();
-  document.getElementById('cancelText').innerHTML = '<strong>Ryany</strong> wordt niet verwijderd.<br><span class="delay">...</span>';
-  await new Promise(r => setTimeout(r, 1500));
-
-  sndUneasy();
-  document.getElementById('cancelText').innerHTML = '<span class="warn">Er gebeurt iets.</span><br><span class="delay">Je drukte op annuleren, maar...</span>';
-  await new Promise(r => setTimeout(r, 1800));
-
-  sndDialog();
-  show('p2b');
-  runProgress('pbar', 'progressLabel', 'stopBtn');
+// === ROUTES ===
+async function cancelDelete(){
+  sCancel();show('p2');
+  await new Promise(r=>setTimeout(r,2000));
+  sPause();
+  document.getElementById('cancelText').innerHTML='<strong>Ryany</strong> wordt niet verwijderd.<br><span style="color:#aeaeb2;">Goede keuze.</span>';
+  await new Promise(r=>setTimeout(r,1800));
+  sUneasy();
+  document.getElementById('cancelText').innerHTML='<strong>Ryany</strong> wordt niet verwijderd.<br><span style="color:#aeaeb2;">...</span>';
+  document.getElementById('p2Icon').textContent='😐';
+  await new Promise(r=>setTimeout(r,1500));
+  sUneasy();
+  document.getElementById('cancelText').innerHTML='<span style="color:#d32f2f;">Er gebeurt iets.</span><br><span style="color:#aeaeb2;">Je drukte op annuleren, maar...</span>';
+  document.getElementById('p2Icon').textContent='⚠️';
+  await new Promise(r=>setTimeout(r,1800));
+  sDialog();show('p2b');
+  runProgress('pbar','progressLabel','stopBtn');
 }
 
-// === DELETE ROUTE ===
-async function startDelete() {
-  sndDialog();
-  show('p3');
-  runProgress('pbar3', 'progressLabel3', 'stopBtn3');
-}
+async function startDelete(){sDialog();show('p3');runProgress('pbar3','progressLabel3','stopBtn3')}
 
-// === STOP BUTTONS ===
-let panicClicks = 0;
-let panicClicks3 = 0;
+// === STOP ===
+let pc=0,pc3=0;
+function tryStop(){sPanic();pc++;const b=document.getElementById('stopBtn');if(pc===1){b.textContent="Geweigerd";b.style.fontSize="12px"}else if(pc===2){b.textContent="Systeem luistert niet";b.style.fontSize="11px"}else{b.disabled=true;b.textContent="Geblokkeerd";b.style.opacity="0.3";sFail()}}
+function tryStop3(){sPanic();pc3++;const b=document.getElementById('stopBtn3');if(pc3===1){b.textContent="Geweigerd";b.style.fontSize="12px"}else if(pc3===2){b.textContent="Te laat";b.style.fontSize="11px"}else{b.disabled=true;b.textContent="Onmogelijk";b.style.opacity="0.3";sFail()}}
 
-function tryStop() {
-  sndPanic();
-  panicClicks++;
-  const btn = document.getElementById('stopBtn');
-  if (panicClicks === 1) { btn.textContent = "⏹ Stoppen geweigerd"; btn.style.fontSize = "12px"; }
-  else if (panicClicks === 2) { btn.textContent = "⏹ Het systeem luistert niet"; btn.style.fontSize = "11px"; }
-  else { btn.disabled = true; btn.textContent = "⏹ Geblokkeerd"; btn.style.opacity = "0.4"; sndFail(); }
-}
-
-function tryStop3() {
-  sndPanic();
-  panicClicks3++;
-  const btn = document.getElementById('stopBtn3');
-  if (panicClicks3 === 1) { btn.textContent = "Annuleren geweigerd"; btn.style.fontSize = "12px"; }
-  else if (panicClicks3 === 2) { btn.textContent = "Te laat om te stoppen"; btn.style.fontSize = "11px"; }
-  else { btn.disabled = true; btn.textContent = "Onmogelijk"; btn.style.opacity = "0.4"; sndFail(); }
-}
-
-// === PROGRESS ENGINE ===
-async function runProgress(barId, labelId, stopBtnId) {
-  const bar = document.getElementById(barId);
-  const label = document.getElementById(labelId);
-
-  // Show stop button after delay (prevent ghost clicks from touch)
-  setTimeout(() => {
-    const pb = stopBtnId === 'stopBtn' ? document.getElementById('panicBtns') : document.getElementById('panicBtns3');
-    if (pb) pb.classList.add('show');
-  }, 2500);
-
-  const steps = [
-    { p: 5, t: "Bestanden doorzoeken...", d: 1200 },
-    { p: 12, t: "223 gedeelde herinneringen gevonden", d: 1400 },
-    { p: 18, t: "Herinnering 'kerst 2019' proberen te wissen...", d: 1300 },
-    { p: 24, t: "Geweigerd. Die was te leuk.", d: 1400 },
-    { p: 30, t: "Herinnering 'samen lachen om niks' proberen...", d: 1300 },
-    { p: 36, t: "Geweigerd. Kon niet verwijderd worden.", d: 1400 },
-    { p: 42, t: "Profiel analyseren...", d: 1100 },
-    { p: 48, t: "Te belangrijk om te verwijderen.", d: 1400 },
-    { p: 54, t: "Zoektocht naar reden om te verwijderen...", d: 1200 },
-    { p: 58, t: "Geen reden gevonden.", d: 1200 },
-    { p: 63, t: "Agent-status controleren...", d: 1100 },
-    { p: 68, t: "Toekomstig agent. Verwijdering verboden.", d: 1400 },
-    { p: 74, t: "Profiel-score berekenen...", d: 1200 },
-    { p: 80, t: "Score: ∞. Verwijdering onmogelijk.", d: 1400 },
-    { p: 85, t: "Systeem probeert het toch...", d: 1200 },
-    { p: 90, t: "Geweigerd. Alles weigert.", d: 1400 },
-    { p: 95, t: "Binding te sterk. Onmogelijk.", d: 1300 },
-    { p: 100, t: "Verwijdering afgebroken.", d: 1400 },
+// === PROGRESS ===
+async function runProgress(bid,lid,sid){
+  const bar=document.getElementById(bid),lbl=document.getElementById(lid);
+  setTimeout(()=>{const p=sid==='stopBtn'?document.getElementById('panicBtns'):document.getElementById('panicBtns3');if(p)p.classList.add('show')},2500);
+  const steps=[
+    {p:5,t:"Bestanden doorzoeken...",d:1200},
+    {p:12,t:"223 gedeelde herinneringen gevonden",d:1400},
+    {p:18,t:"Herinnering 'kerst 2019' proberen te wissen...",d:1300},
+    {p:24,t:"Geweigerd. Die was te leuk.",d:1400},
+    {p:30,t:"Herinnering 'samen lachen om niks' proberen...",d:1300},
+    {p:36,t:"Geweigerd. Kon niet verwijderd worden.",d:1400},
+    {p:42,t:"Profiel analyseren...",d:1100},
+    {p:48,t:"Te belangrijk om te verwijderen.",d:1400},
+    {p:54,t:"Zoektocht naar reden om te verwijderen...",d:1200},
+    {p:58,t:"Geen reden gevonden.",d:1200},
+    {p:63,t:"Agent-status controleren...",d:1100},
+    {p:68,t:"Toekomstig agent. Verwijdering verboden.",d:1400},
+    {p:74,t:"Profiel-score berekenen...",d:1200},
+    {p:80,t:"Score: ∞. Verwijdering onmogelijk.",d:1400},
+    {p:85,t:"Systeem probeert het toch...",d:1200},
+    {p:90,t:"Geweigerd. Alles weigert.",d:1400},
+    {p:95,t:"Binding te sterk. Onmogelijk.",d:1300},
+    {p:100,t:"Verwijdering afgebroken.",d:1400},
   ];
-
-  for (const s of steps) {
-    bar.style.width = s.p + '%';
-    label.textContent = s.t;
-    if (s.p > 80) { bar.style.background = '#c42b1c'; sndFail(); }
-    else if (s.p > 60) { bar.style.background = '#e8a030'; sndWarn(); }
-    else { bar.style.background = '#0078d4'; sndProgress(); }
-    await new Promise(r => setTimeout(r, s.d));
+  for(const s of steps){
+    bar.style.width=s.p+'%';lbl.textContent=s.t;
+    if(s.p>80){bar.style.background='#d32f2f';sFail()}
+    else if(s.p>60){bar.style.background='#ff9500';sWarn()}
+    else{bar.style.background='#007aff';sProg()}
+    await new Promise(r=>setTimeout(r,s.d));
   }
-
-  const stopBtn = document.getElementById(stopBtnId);
-  if (stopBtn) { stopBtn.disabled = true; stopBtn.style.opacity = '0.3'; }
-
-  await new Promise(r => setTimeout(r, 1000));
+  const sb=document.getElementById(sid);if(sb){sb.disabled=true;sb.style.opacity='0.3'}
+  await new Promise(r=>setTimeout(r,1000));
   showReveal();
 }
 
 // === REVEAL ===
-async function showReveal() {
-  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
+async function showReveal(){
+  document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show'));
   document.getElementById('errorPage').classList.add('hidden');
-  const revealEl = document.getElementById('reveal');
-  revealEl.classList.add('show');
+  document.getElementById('reveal').classList.add('show');
 
-  const text = document.getElementById('revealText');
-  text.innerHTML = 'Foutcode: <strong>TE_LIEF_OM_TE_VERWIJDEREN</strong>';
+  const txt=document.getElementById('revealText');
+  txt.innerHTML='Foutcode: <span class="gold">TE_LIEF_OM_TE_VERWIJDEREN</span>';
+  sReveal();spawnConfetti(40);spawnSparkles(20);
 
-  sndReveal();
-  spawnConfetti(50);
+  await new Promise(r=>setTimeout(r,2200));
+  txt.innerHTML+='<br><br><span class="warm">Het systeem probeerde het. Echt.</span>';
+  await new Promise(r=>setTimeout(r,1800));
 
-  await new Promise(r => setTimeout(r, 2200));
+  txt.innerHTML+='<br>Maar <span class="gold">liefste zus ter wereld</span> is niet zomaar te verwijderen.';
+  spawnSparkles(10);
+  await new Promise(r=>setTimeout(r,2200));
 
-  text.innerHTML += '<br><br>Het systeem probeerde het. Echt.';
-  await new Promise(r => setTimeout(r, 1800));
+  txt.innerHTML+='<br><br><span class="sincere">En tussen twee haakjes — sorry dat ik je soms pest.</span>';
+  await new Promise(r=>setTimeout(r,1500));
+  txt.innerHTML+='<br><span class="sincere">Je verdient het. Maar toch. Sorry.</span>';
+  await new Promise(r=>setTimeout(r,1800));
 
-  text.innerHTML += '<br>Maar <span class="acc">liefste zus ter wereld</span> is niet zomaar te verwijderen.';
-  await new Promise(r => setTimeout(r, 2200));
-
-  text.innerHTML += '<br><br><span class="sincere">En tussen twee haakjes — sorry dat ik je soms pest.</span>';
-  await new Promise(r => setTimeout(r, 1500));
-  text.innerHTML += '<br><span class="sincere">Je verdient het. Maar toch. Sorry.</span>';
-
-  await new Promise(r => setTimeout(r, 1800));
-
-  text.innerHTML += '<br><br>Verwijdering: <strong>permanent geblokkeerd</strong>.';
-
-  setTimeout(() => { document.getElementById('trap').classList.add('show'); }, 1200);
+  txt.innerHTML+='<br><br>Verwijdering: <span class="gold">permanent geblokkeerd</span>.';
+  spawnConfetti(20);spawnSparkles(15);
+  setTimeout(()=>{document.getElementById('trap').classList.add('show')},1200);
 }
 
-function spawnConfetti(n) {
-  const colors = ['#ffd700','#0078d4','#fff','#ff4444','#0f0'];
-  for (let i = 0; i < n; i++) {
-    setTimeout(() => {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      const s = 4 + Math.random()*6;
-      c.style.left = Math.random()*100+'vw';
-      c.style.width = s+'px'; c.style.height = s+'px';
-      c.style.background = colors[Math.floor(Math.random()*colors.length)];
-      c.style.borderRadius = Math.random()>0.5?'50%':'2px';
-      c.style.animationDuration = (2+Math.random()*3)+'s';
-      c.style.opacity = 0.4+Math.random()*0.6;
-      document.body.appendChild(c);
-      setTimeout(()=>c.remove(),5000);
-    }, i*30);
-  }
+function spawnConfetti(n){
+  const cols=['#ffd700','#ff9500','#fff','#ff4444','#28c840'];
+  for(let i=0;i<n;i++){setTimeout(()=>{const c=document.createElement('div');c.className='confetti';const s=4+Math.random()*6;c.style.left=Math.random()*100+'vw';c.style.width=s+'px';c.style.height=s+'px';c.style.background=cols[Math.floor(Math.random()*cols.length)];c.style.borderRadius=Math.random()>0.5?'50%':'2px';c.style.animationDuration=(2+Math.random()*3)+'s';c.style.opacity=0.4+Math.random()*0.6;document.body.appendChild(c);setTimeout(()=>c.remove(),5000)},i*30)}
 }
 
-const trapMsgs = [
+function spawnSparkles(n){
+  for(let i=0;i<n;i++){setTimeout(()=>{const s=document.createElement('div');s.className='sparkle';const sz=2+Math.random()*4;s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*40+'vh';s.style.width=sz+'px';s.style.height=sz+'px';s.style.background=`hsl(${40+Math.random()*20},100%,${60+Math.random()*30}%)`;s.style.animationDuration=(3+Math.random()*4)+'s';s.style.boxShadow=`0 0 ${sz*2}px ${s.style.background}`;document.body.appendChild(s);setTimeout(()=>s.remove(),7000)},i*100)}
+}
+
+const trapMsgs=[
   "Beschermd bestand. Sinds geboorte.",
   "Verwijderen onmogelijk. Liefste zus forever.",
   "Zelfs de politie kan dit niet verwijderen.",
@@ -601,24 +433,17 @@ const trapMsgs = [
   "Fout: te belangrijk om te verwijderen.",
   "Agent-status: beschermd. Verwijdering verboden.",
 ];
-let trapIdx = 0;
-
-document.getElementById('reveal').addEventListener('click', () => {
-  if (!document.getElementById('trap').classList.contains('show')) return;
-  document.getElementById('trapMsg').textContent = '> ' + trapMsgs[trapIdx % trapMsgs.length];
-  trapIdx++;
-  sndTrap();
-  spawnConfetti(8);
+let ti=0;
+document.getElementById('reveal').addEventListener('click',()=>{
+  if(!document.getElementById('trap').classList.contains('show'))return;
+  document.getElementById('trapMsg').textContent='> '+trapMsgs[ti%trapMsgs.length];ti++;sTrap();spawnConfetti(6);spawnSparkles(4)
 });
-document.addEventListener('keydown', () => {
-  if (!document.getElementById('trap').classList.contains('show')) return;
-  document.getElementById('trapMsg').textContent = '> ' + trapMsgs[trapIdx % trapMsgs.length];
-  trapIdx++;
-  sndTrap();
-  spawnConfetti(8);
+document.addEventListener('keydown',()=>{
+  if(!document.getElementById('trap').classList.contains('show'))return;
+  document.getElementById('trapMsg').textContent='> '+trapMsgs[ti%trapMsgs.length];ti++;sTrap();spawnConfetti(6);spawnSparkles(4)
 });
 
-// === BOOT ===
+// BOOT
 runErrorMorph();
 </script>
 </body>
