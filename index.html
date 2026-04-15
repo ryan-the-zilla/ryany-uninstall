@@ -3,119 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ryanx — dev/test</title>
+<title>ryan-the-zilla.github.io</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #1e1e1e;
-    font-family: 'JetBrains Mono', monospace;
-    color: #d4d4d4;
+
+  /* === FAKE ERROR PAGE === */
+  .error-page {
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    background: #fff;
     min-height: 100vh;
-    font-size: 13px;
-    line-height: 1.7;
-  }
-
-  /* === DEV ENVIRONMENT === */
-  .dev-env {
-    padding: 20px;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  .dev-env.hidden { display: none; }
-
-  .dev-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #333;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    color: #333;
   }
-  .dev-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dev-dot.r { background: #ff5f57; }
-  .dev-dot.y { background: #febc2e; }
-  .dev-dot.g { background: #28c840; }
-  .dev-tab {
-    background: #2d2d2d;
-    padding: 4px 14px;
-    border-radius: 4px 4px 0 0;
-    color: #888;
-    font-size: 11px;
-    margin-left: 10px;
-  }
-  .dev-tab.active { color: #d4d4d4; background: #1e1e1e; }
+  .error-page.hidden { display: none; }
 
-  .dev-title {
-    color: #569cd6;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 6px;
+  .err-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.7;
   }
-  .dev-subtitle {
-    color: #6a9955;
-    font-size: 12px;
-    margin-bottom: 16px;
-  }
-
-  .dev-note {
-    background: #2d2d2d;
-    padding: 10px 14px;
-    border-radius: 4px;
+  .err-title {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
     margin-bottom: 8px;
-    border-left: 3px solid #444;
+    transition: all 0.8s ease;
   }
-  .dev-note.warn { border-left-color: #febc2e; }
-  .dev-note.todo { border-left-color: #569cd6; }
-  .dev-note.secret { border-left-color: #ff5f57; }
-  .dev-note .label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 2px;
-    opacity: 0.6;
+  .err-code {
+    font-size: 14px;
+    color: #666;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 24px;
+    transition: all 0.8s ease;
   }
-  .dev-note.warn .label { color: #febc2e; }
-  .dev-note.todo .label { color: #569cd6; }
-  .dev-note.secret .label { color: #ff5f57; }
+  .err-detail {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.8;
+    max-width: 400px;
+  }
+  .err-detail strong { color: #555; }
+  .err-suggestion {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #aaa;
+  }
 
-  .dev-status {
-    margin-top: 16px;
-    padding: 12px;
-    background: #252525;
-    border-radius: 4px;
-    border: 1px solid #333;
+  /* Glitch effects */
+  .err-title.glitch {
+    animation: glitch 0.3s ease;
   }
-  .dev-status .key { color: #9cdcfe; }
-  .dev-status .val { color: #ce9178; }
-  .dev-status .ok { color: #28c840; }
-
-  .dev-loading {
-    margin-top: 16px;
-    padding: 10px 14px;
-    background: #1a1a2e;
-    border: 1px solid #333;
-    border-radius: 4px;
-    display: none;
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 2px); filter: hue-rotate(90deg); }
+    40% { transform: translate(3px, -1px); }
+    60% { transform: translate(-1px, -2px); filter: hue-rotate(180deg); }
+    80% { transform: translate(2px, 1px); }
+    100% { transform: translate(0); filter: none; }
   }
-  .dev-loading.show { display: block; }
-  .dev-loading .cmd { color: #6a9955; }
-  .dev-loading .cursor {
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: #d4d4d4;
-    animation: blink 0.8s step-end infinite;
-    vertical-align: text-bottom;
-    margin-left: 2px;
+  .err-code.glitch-text {
+    color: #c42b1c;
   }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .dev-counter {
-    margin-top: 12px;
-    font-size: 11px;
-    color: #555;
-  }
+  .err-red { color: #c42b1c !important; }
+  .err-fade { opacity: 0.5; transition: opacity 0.5s; }
 
   /* === UNINSTALL OVERLAY === */
   .overlay {
@@ -191,10 +146,6 @@
   .panic-buttons { display: none; padding: 0 22px 14px; }
   .panic-buttons.show { display: flex; gap: 8px; justify-content: flex-end; }
 
-  /* Cancelled calm screen */
-  .cancelled-text { padding: 18px 22px; font-size: 13px; color: #555; line-height: 1.7; font-family: 'Segoe UI', sans-serif; }
-  .cancelled-text .delay { color: #aaa; }
-
   /* Reveal */
   .reveal-overlay {
     display: none;
@@ -226,58 +177,43 @@
   .confetti { position: fixed; top: -10px; z-index: 101; pointer-events: none; animation: cFall linear forwards; }
   @keyframes cFall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 
+  /* Screen shake */
+  .shake { animation: shake 0.5s ease; }
+  @keyframes shake {
+    0%,100% { transform: translate(0); }
+    10% { transform: translate(-4px, 2px); }
+    30% { transform: translate(4px, -2px); }
+    50% { transform: translate(-2px, 4px); }
+    70% { transform: translate(2px, -4px); }
+    90% { transform: translate(-3px, 1px); }
+  }
+
   @media (max-width: 600px) {
     .dialog { max-width: 95%; }
     .rv-title { font-size: 1.5em; }
-    .dev-env { padding: 14px; font-size: 12px; }
+    .error-page { padding: 30px 16px; }
+    .err-icon { font-size: 48px; }
+    .err-title { font-size: 17px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Phase 0: Dev Environment (the meta layer) -->
-<div class="dev-env" id="devEnv">
-  <div class="dev-header">
-    <div class="dev-dot r"></div>
-    <div class="dev-dot y"></div>
-    <div class="dev-dot g"></div>
-    <div class="dev-tab active">project-ryany.js</div>
+<!-- Phase 0: Fake Chrome Error Page -->
+<div class="error-page" id="errorPage">
+  <div class="err-icon" id="errIcon">😕</div>
+  <div class="err-title" id="errTitle">Deze site kan niet worden bereikt</div>
+  <div class="err-code" id="errCode">ERR_CONNECTION_REFUSED</div>
+  <div class="err-detail" id="errDetail">
+    <strong>ryan-the-zilla.github.io</strong> heeft de verbinding geweigerd.<br>
+    Probeer:
+    <ul style="text-align:left; margin: 12px 0 0 20px; list-style: disc;">
+      <li>De pagina opnieuw laden</li>
+      <li>Je verbinding te controleren</li>
+      <li>De site later opnieuw te proberen</li>
+    </ul>
   </div>
-
-  <div class="dev-title">// PROJECT: RYANY v4.2</div>
-  <div class="dev-subtitle">// auto-deploy test — laatste check voor live</div>
-
-  <div class="dev-note todo">
-    <div class="label">TODO</div>
-    Stuur link naar Ryany als "kan je deze even testen op je telefoon"
-  </div>
-
-  <div class="dev-note warn">
-    <div class="label">BELANGRIJK</div>
-    Zij mag NIET weten dat dit over haar gaat. De uninstall moet er echt uitzien.
-  </div>
-
-  <div class="dev-note">
-    <div class="label">NOTITIE</div>
-    Als ze op annuleren drukt → systeem start zelf. Ze heeft geen keuze.
-  </div>
-
-  <div class="dev-note secret">
-    <div class="label">SECRET</div>
-    Ze gaat dit haten. En dan lachen. Hopelijk.
-  </div>
-
-  <div class="dev-status">
-    <span class="key">target</span>: <span class="val">"Ryany (19, zus)"</span><br>
-    <span class="key">status</span>: <span class="ok">geactiveerd — wacht op target</span><br>
-    <span class="key">trigger</span>: <span class="val">auto-detect bij paginalaad</span>
-  </div>
-
-  <div class="dev-loading" id="devLoading">
-    <span class="cmd" id="devCmd"></span><span class="cursor"></span>
-  </div>
-
-  <div class="dev-counter" id="devCounter"></div>
+  <div class="err-suggestion" id="errSuggestion">Foutdetails: CONNECTION_REFUSED — Poort 443</div>
 </div>
 
 <!-- Phase 1: Delete dialog -->
@@ -302,7 +238,7 @@
   </div>
 </div>
 
-<!-- Phase 2a: Cancelled — calm, then uneasy -->
+<!-- Phase 2a: Cancelled -->
 <div class="overlay" id="p2">
   <div class="dialog">
     <div class="dialog-header">
@@ -342,7 +278,7 @@
   </div>
 </div>
 
-<!-- Phase 3: Delete clicked — direct progress -->
+<!-- Phase 3: Delete clicked -->
 <div class="overlay" id="p3">
   <div class="dialog">
     <div class="dialog-header">
@@ -389,73 +325,109 @@ function beep(freq, dur, type='square', vol=0.08) {
   o.start(); g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur/1000);
   o.stop(actx.currentTime + dur/1000);
 }
-function sndType() { beep(800+Math.random()*400, 25, 'sine', 0.03); }
+function sndGlitch() { beep(150+Math.random()*100, 60, 'sawtooth', 0.06); }
 function sndDialog() { beep(400, 60, 'sine', 0.06); }
 function sndCancel() { beep(600, 80, 'sine', 0.08); setTimeout(()=>beep(800, 60, 'sine', 0.06), 100); }
-function sndUneasy() { beep(300, 200, 'sawtooth', 0.05); setTimeout(()=>beep(350, 250, 'sawtooth', 0.04), 250); }
+function sndUneasy() { beep(300, 180, 'sawtooth', 0.05); }
 function sndProgress() { beep(500+Math.random()*200, 40, 'sine', 0.04); }
-function sndWarn() { beep(250, 150, 'sawtooth', 0.07); }
-function sndFail() { for(let i=0;i<3;i++) setTimeout(()=>beep(300-i*60, 80, 'square', 0.08), i*100); }
-function sndPanic() { beep(800, 60, 'square', 0.1); }
-function sndReveal() { beep(523,80,'sine',0.1); setTimeout(()=>beep(659,80,'sine',0.1),100); setTimeout(()=>beep(784,120,'sine',0.12),200); setTimeout(()=>beep(1047,150,'sine',0.15),320); }
-function sndTrap() { beep(200, 80, 'square', 0.06); }
-function sndPause() { beep(200, 400, 'sine', 0.03); }
+function sndWarn() { beep(250, 120, 'sawtooth', 0.07); }
+function sndFail() { for(let i=0;i<3;i++) setTimeout(()=>beep(300-i*60, 60, 'square', 0.08), i*80); }
+function sndPanic() { beep(800, 50, 'square', 0.1); }
+function sndReveal() { beep(523,80,'sine',0.1); setTimeout(()=>beep(659,80,'sine',0.1),100); setTimeout(()=>beep(784,100,'sine',0.12),200); setTimeout(()=>beep(1047,120,'sine',0.15),300); }
+function sndTrap() { beep(200, 60, 'square', 0.06); }
+function sndPause() { beep(200, 300, 'sine', 0.03); }
+function sndMorph() { for(let i=0;i<4;i++) setTimeout(()=>beep(200+i*80, 50, 'sawtooth', 0.04), i*60); }
 document.addEventListener('click', initAudio, { once: true });
 document.addEventListener('keydown', initAudio, { once: true });
-// === END SOUND ENGINE ===
-
-// === TYPEWRITER ===
-async function typeText(el, text, speed=35) {
-  for (let i = 0; i < text.length; i++) {
-    el.textContent += text[i];
-    if (i % 3 === 0) sndType();
-    await new Promise(r => setTimeout(r, speed));
-  }
-}
-
-// === META LAYER: DEV ENVIRONMENT ===
-async function runDevSequence() {
-  const loading = document.getElementById('devLoading');
-  const cmd = document.getElementById('devCmd');
-  const counter = document.getElementById('devCounter');
-
-  loading.classList.add('show');
-
-  // Fake "scanning" commands
-  const cmds = [
-    '> target.lock(Ryany)',
-    '> status: ONLINE',
-    '> detecteren... target gevonden',
-    '> activatie over 3...',
-  ];
-
-  for (let i = 0; i < cmds.length; i++) {
-    cmd.textContent = '';
-    await typeText(cmd, cmds[i], 40);
-    await new Promise(r => setTimeout(r, 600));
-  }
-
-  // Countdown
-  counter.style.color = '#ff5f57';
-  counter.style.fontSize = '14px';
-  for (let i = 3; i >= 1; i--) {
-    counter.textContent = i + '...';
-    sndType();
-    await new Promise(r => setTimeout(r, 700));
-  }
-  counter.textContent = '';
-  loading.classList.remove('show');
-
-  // Hide dev env, show dialog
-  sndDialog();
-  document.getElementById('devEnv').classList.add('hidden');
-  document.getElementById('p1').classList.add('show');
-}
 
 function show(id) {
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
   const el = document.getElementById(id);
   if (el) el.classList.add('show');
+}
+
+// === ERROR PAGE MORPH ===
+async function glitchEl(id) {
+  const el = document.getElementById(id);
+  el.classList.add('glitch');
+  sndGlitch();
+  await new Promise(r => setTimeout(r, 300));
+  el.classList.remove('glitch');
+}
+
+async function runErrorMorph() {
+  const title = document.getElementById('errTitle');
+  const code = document.getElementById('errCode');
+  const detail = document.getElementById('errDetail');
+  const suggestion = document.getElementById('errSuggestion');
+  const icon = document.getElementById('errIcon');
+
+  // Phase 0: Normal error, she reads it (~3s)
+  await new Promise(r => setTimeout(r, 3000));
+
+  // First micro-glitch — barely noticeable
+  await glitchEl('errTitle');
+  code.textContent = 'ERR_CONNECTION_REFUSED';
+  await new Promise(r => setTimeout(r, 1500));
+
+  // Glitch 2 — title flickers
+  await glitchEl('errTitle');
+  title.textContent = 'Deze site kan niet worden bereikt.';
+  await glitchEl('errTitle');
+  title.textContent = 'Deze zus kan niet worden bereikt';
+  sndMorph();
+  await new Promise(r => setTimeout(r, 1200));
+
+  // She's confused now. Revert.
+  await glitchEl('errTitle');
+  title.textContent = 'Deze site kan niet worden bereikt';
+  code.textContent = 'ERR_CONNECTION_REFUSED';
+  await new Promise(r => setTimeout(r, 2000));
+
+  // Glitch 3 — bigger, error code changes
+  document.body.classList.add('shake');
+  sndGlitch();
+  await new Promise(r => setTimeout(r, 400));
+  document.body.classList.remove('shake');
+
+  code.textContent = 'ERR_SISTE_NOT_FOUND';
+  code.classList.add('glitch-text');
+  await new Promise(r => setTimeout(r, 1000));
+
+  // Suggestion changes
+  suggestion.textContent = 'Foutdetails: SUBJEKT_RYANY — Verwijdering in behandeling';
+  suggestion.style.color = '#c42b1c';
+  sndMorph();
+  await new Promise(r => setTimeout(r, 1500));
+
+  // Icon changes
+  icon.textContent = '⚠️';
+  await new Promise(r => setTimeout(r, 800));
+
+  // Big morph — title fully changes
+  document.body.classList.add('shake');
+  sndGlitch(); sndGlitch();
+  title.textContent = 'Ryany verwijderen?';
+  title.style.color = '#c42b1c';
+  title.style.fontWeight = '600';
+  code.textContent = 'VERWIJDEREN_BEVESTIGEN';
+  detail.innerHTML = '<strong>Ryany</strong> is gevonden in het systeem.<br>Type: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#c42b1c;font-weight:600;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+  await new Promise(r => setTimeout(r, 500));
+  document.body.classList.remove('shake');
+
+  // Wait — she's reading, realizing what's happening
+  await new Promise(r => setTimeout(r, 2000));
+
+  // Buttons appear — the error page BECOMES the dialog
+  const btns = document.createElement('div');
+  btns.style.cssText = 'margin-top:24px; display:flex; gap:8px; justify-content:center;';
+  btns.innerHTML = '<button class="btn btn-primary" onclick="cancelDelete()" style="padding:8px 24px; font-size:14px;">Annuleren</button><button class="btn btn-danger" onclick="startDelete()" style="padding:8px 24px; font-size:14px;">Verwijderen</button>';
+  detail.appendChild(btns);
+
+  // Hide the old suggestion
+  suggestion.style.display = 'none';
+
+  sndDialog();
 }
 
 // === CANCEL ROUTE ===
@@ -511,30 +483,30 @@ function tryStop3() {
   else { btn.disabled = true; btn.textContent = "Onmogelijk"; btn.style.opacity = "0.4"; sndFail(); }
 }
 
-// === PROGRESS ENGINE (FAST) ===
+// === PROGRESS ENGINE ===
 async function runProgress(barId, labelId, stopBtnId) {
   const bar = document.getElementById(barId);
   const label = document.getElementById(labelId);
 
   const steps = [
     { p: 5, t: "Bestanden doorzoeken...", d: 1200 },
-    { p: 12, t: "223 gedeelde herinneringen gevonden", d: 1600 },
-    { p: 18, t: "Herinnering 'kerst 2019' proberen te wissen...", d: 1500 },
-    { p: 24, t: "Geweigerd. Die was te leuk.", d: 1600 },
-    { p: 30, t: "Herinnering 'samen lachen om niks' proberen...", d: 1400 },
-    { p: 36, t: "Geweigerd. Kon niet verwijderd worden.", d: 1500 },
-    { p: 42, t: "Profiel analyseren...", d: 1200 },
-    { p: 48, t: "Te belangrijk om te verwijderen.", d: 1600 },
-    { p: 54, t: "Zoektocht naar reden om te verwijderen...", d: 1400 },
-    { p: 58, t: "Geen reden gevonden.", d: 1400 },
-    { p: 63, t: "Agent-status controleren...", d: 1200 },
-    { p: 68, t: "Toekomstig agent. Verwijdering verboden.", d: 1600 },
-    { p: 74, t: "Profiel-score berekenen...", d: 1400 },
-    { p: 80, t: "Score: ∞. Verwijdering onmogelijk.", d: 1500 },
-    { p: 85, t: "Systeem probeert het toch...", d: 1400 },
-    { p: 90, t: "Geweigerd. Alles weigert.", d: 1500 },
-    { p: 95, t: "Binding te sterk. Onmogelijk.", d: 1500 },
-    { p: 100, t: "Verwijdering afgebroken.", d: 1500 },
+    { p: 12, t: "223 gedeelde herinneringen gevonden", d: 1400 },
+    { p: 18, t: "Herinnering 'kerst 2019' proberen te wissen...", d: 1300 },
+    { p: 24, t: "Geweigerd. Die was te leuk.", d: 1400 },
+    { p: 30, t: "Herinnering 'samen lachen om niks' proberen...", d: 1300 },
+    { p: 36, t: "Geweigerd. Kon niet verwijderd worden.", d: 1400 },
+    { p: 42, t: "Profiel analyseren...", d: 1100 },
+    { p: 48, t: "Te belangrijk om te verwijderen.", d: 1400 },
+    { p: 54, t: "Zoektocht naar reden om te verwijderen...", d: 1200 },
+    { p: 58, t: "Geen reden gevonden.", d: 1200 },
+    { p: 63, t: "Agent-status controleren...", d: 1100 },
+    { p: 68, t: "Toekomstig agent. Verwijdering verboden.", d: 1400 },
+    { p: 74, t: "Profiel-score berekenen...", d: 1200 },
+    { p: 80, t: "Score: ∞. Verwijdering onmogelijk.", d: 1400 },
+    { p: 85, t: "Systeem probeert het toch...", d: 1200 },
+    { p: 90, t: "Geweigerd. Alles weigert.", d: 1400 },
+    { p: 95, t: "Binding te sterk. Onmogelijk.", d: 1300 },
+    { p: 100, t: "Verwijdering afgebroken.", d: 1400 },
   ];
 
   for (const s of steps) {
@@ -556,6 +528,7 @@ async function runProgress(barId, labelId, stopBtnId) {
 // === REVEAL ===
 async function showReveal() {
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
+  document.getElementById('errorPage').classList.add('hidden');
   const revealEl = document.getElementById('reveal');
   revealEl.classList.add('show');
 
@@ -629,7 +602,7 @@ document.addEventListener('keydown', () => {
 });
 
 // === BOOT ===
-runDevSequence();
+runErrorMorph();
 </script>
 </body>
 </html>
