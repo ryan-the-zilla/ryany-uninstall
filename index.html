@@ -264,6 +264,33 @@
 </div>
 
 <script>
+// === SOUND ENGINE ===
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx;
+function initAudio() { if (!actx) actx = new AudioCtx(); }
+function beep(freq, dur, type='square', vol=0.08) {
+  if (!actx) return;
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = type; o.frequency.value = freq; g.gain.value = vol;
+  o.connect(g); g.connect(actx.destination);
+  o.start(); g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur/1000);
+  o.stop(actx.currentTime + dur/1000);
+}
+function sndDialog() { beep(400, 60, 'sine', 0.06); }
+function sndClick() { beep(500, 40, 'sine', 0.05); }
+function sndWarn() { beep(250, 200, 'sawtooth', 0.08); }
+function sndError() { beep(200,300,'sawtooth',0.12); setTimeout(()=>beep(150,300,'sawtooth',0.1),350); }
+function sndProgress() { beep(500+Math.random()*200, 40, 'sine', 0.04); }
+function sndFail() { for(let i=0;i<3;i++) setTimeout(()=>beep(300-i*50, 80, 'square', 0.07), i*100); }
+function sndPanic() { beep(800, 80, 'square', 0.1); }
+function sndReveal() { beep(523,100,'sine',0.1); setTimeout(()=>beep(659,100,'sine',0.1),120); setTimeout(()=>beep(784,150,'sine',0.12),240); setTimeout(()=>beep(1047,200,'sine',0.15),400); }
+function sndTrap() { beep(200, 100, 'square', 0.06); }
+document.addEventListener('click', initAudio, { once: true });
+document.addEventListener('keydown', initAudio, { once: true });
+// Auto-init on dialog appear
+sndDialog();
+// === END SOUND ENGINE ===
+
 let phase = 0;
 let deleting = false;
 let cancelFails = 0;
@@ -320,14 +347,17 @@ let trapIdx = 0;
 
 function cancelAttempt() {
   cancelFails++;
+  sndClick();
   if (cancelFails === 1) {
     // "Annuleren" doesn't work — goes to confirm instead
     phase = 1;
     document.getElementById('init').classList.add('hide');
     document.getElementById('confirm').classList.add('show');
+    sndDialog();
     updateConfirm();
   } else {
     // Cancel keeps "failing"
+    sndFail();
     startDelete();
   }
 }
@@ -340,10 +370,13 @@ function updateConfirm() {
 
 function confirmDelete() {
   phase++;
+  sndClick();
   if (phase <= 3) {
+    sndDialog();
     updateConfirm();
   }
   if (phase >= 3) {
+    sndWarn();
     startDelete();
   }
 }
@@ -359,6 +392,7 @@ function startDelete() {
 
 let panicClicks = 0;
 function tryStop() {
+  sndPanic();
   const btn = document.getElementById('stopBtn');
   const label = document.getElementById('progressLabel');
   panicClicks++;
@@ -380,7 +414,9 @@ async function runProgress() {
   for (const s of progressSteps) {
     bar.style.width = s.p + '%';
     label.textContent = s.t;
-    if (s.p > 60) bar.style.background = '#c42b1c';
+    if (s.p > 60) { bar.style.background = '#c42b1c'; sndFail(); }
+    else if (s.p > 40) { sndWarn(); }
+    else { sndProgress(); }
     if (s.p > 85) bar.style.background = '#ff4444';
     await new Promise(r => setTimeout(r, 800 + Math.random()*600));
   }
@@ -392,6 +428,7 @@ async function runProgress() {
 function showReveal() {
   document.getElementById('overlay').classList.remove('show');
   document.getElementById('reveal').classList.add('show');
+  sndReveal();
   spawnConfetti(50);
   setTimeout(() => {
     document.getElementById('trap').classList.add('show');
@@ -422,6 +459,7 @@ document.getElementById('reveal').addEventListener('click', () => {
   if (!trap.classList.contains('show')) return;
   document.getElementById('trapMsg').textContent = '> ' + trapMsgs[trapIdx % trapMsgs.length];
   trapIdx++;
+  sndTrap();
   spawnConfetti(8);
 });
 document.addEventListener('keydown', (e) => {
@@ -429,6 +467,7 @@ document.addEventListener('keydown', (e) => {
   if (!trap.classList.contains('show')) return;
   document.getElementById('trapMsg').textContent = '> ' + trapMsgs[trapIdx % trapMsgs.length];
   trapIdx++;
+  sndTrap();
   spawnConfetti(8);
 });
 </script>
