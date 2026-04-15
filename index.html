@@ -263,15 +263,19 @@ document.addEventListener('click',ia,{once:true});document.addEventListener('tou
 function showA(id){document.querySelectorAll('.alert-bg').forEach(o=>o.classList.remove('show'));document.getElementById(id).classList.add('show')}
 function hideA(id){document.getElementById(id).classList.remove('show')}
 
-// === RELOAD BUTTON → STARTS MORPH ===
+// === MORPH TRIGGER (auto + manual) ===
+let morphStarted=false;
 function startMorph(){
+  if(morphStarted)return;
+  morphStarted=true;
   const btn=document.getElementById('reloadBtn');
   const spin=document.getElementById('sfSpin');
   btn.style.display='none';
   spin.classList.add('show');
-  // Fake loading for 1.5s, then morph begins
   setTimeout(runErrorMorph,1500);
 }
+// Auto-start after 2.5s regardless
+setTimeout(startMorph,2500);
 
 // === ERROR MORPH ===
 async function glitch(id){const e=document.getElementById(id);e.classList.add('glitch');sGl();await new Promise(r=>setTimeout(r,250));e.classList.remove('glitch')}
