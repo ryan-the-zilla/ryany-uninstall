@@ -268,24 +268,24 @@ let morphStarted=false;
 function startMorph(){
   if(morphStarted)return;
   morphStarted=true;
-  const btn=document.getElementById('reloadBtn');
   const spin=document.getElementById('sfSpin');
-  btn.style.display='none';
   spin.classList.add('show');
   setTimeout(runErrorMorph,1500);
 }
-// Auto-start after 2.5s regardless
+// Auto-start after 2.5s regardless — reload button stays visible as excuse
 setTimeout(startMorph,2500);
 
 // === ERROR MORPH ===
 async function glitch(id){const e=document.getElementById(id);e.classList.add('glitch');sGl();await new Promise(r=>setTimeout(r,250));e.classList.remove('glitch')}
 
 async function runErrorMorph(){
-  const t=document.getElementById('sfH'),c=document.getElementById('sfCode'),
-    b=document.getElementById('sfBody'),f=document.getElementById('sfFoot'),
+  const t=document.getElementById('sfH'),c=document.getElementById('sfC'),
+    b=document.getElementById('sfB'),f=document.getElementById('sfF'),
     ic=document.getElementById('sfE'),sp=document.getElementById('sfSpin');
 
   sp.classList.remove('show');
+  const rb=document.getElementById('reloadBtn');
+  if(rb)rb.style.display='none';
 
   // Still looks like error... then micro-glitch
   await new Promise(r=>setTimeout(r,1500));
@@ -334,7 +334,7 @@ async function runErrorMorph(){
   // Buttons on error page
   const btns=document.createElement('div');
   btns.style.cssText='margin-top:24px;display:flex;gap:10px;justify-content:center;';
-  btns.innerHTML='<button class="alert-btn bold" onclick="cancelDelete()" style="padding:10px 28px;font-size:14px;border:0.5px solid rgba(0,122,255,0.2);border-radius:10px;background:rgba(0,122,255,0.08);">Annuleren</button><button class="alert-btn red" onclick="startDelete()" style="padding:10px 28px;font-size:14px;border:0.5px solid rgba(255,59,48,0.2);border-radius:10px;background:rgba(255,59,48,0.08);">Verwijderen</button>';
+  btns.innerHTML='<button onclick="cancelDelete()" style="display:inline-block;width:auto;padding:10px 28px;font-size:14px;font-weight:600;border:0.5px solid rgba(0,122,255,0.2);border-radius:10px;background:rgba(0,122,255,0.08);color:#007aff;cursor:pointer;">Annuleren</button><button onclick="startDelete()" style="display:inline-block;width:auto;padding:10px 28px;font-size:14px;font-weight:600;border:0.5px solid rgba(255,59,48,0.2);border-radius:10px;background:rgba(255,59,48,0.08);color:#ff3b30;cursor:pointer;">Verwijderen</button>';
   b.appendChild(btns);
   f.style.display='none';
   sDlg();
