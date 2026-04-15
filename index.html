@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ryany — Bestand verwijderen</title>
+<title>FamApp — App verwijderen</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -201,12 +201,12 @@
     <div class="dialog-header">
       <div class="dialog-icon">🗑️</div>
       <div class="dialog-text">
-        <div class="dialog-title">Bestand verwijderen</div>
+        <div class="dialog-title">FamApp verwijderen</div>
         <div class="dialog-desc">
-          Weet je zeker dat je <strong>Ryany</strong> uit de familie wilt verwijderen?<br><br>
-          Type: <strong>Zus (19)</strong><br>
-          Status: <strong>Toekomstig agent</strong><br>
-          Waarschuwing: <span class="warn">Deze actie kan niet ongedaan worden gemaakt.</span>
+          Weet je zeker dat je <strong>FamApp</strong> wilt verwijderen?<br><br>
+          Gebruiker: <strong>Ryany</strong><br>
+          Account: <strong>Broer — Auto-login</strong><br>
+          <span class="warn">Alle gedeelde data wordt permanent verwijderd.</span>
         </div>
       </div>
     </div>
@@ -225,7 +225,7 @@
       <div class="dialog-text">
         <div class="dialog-title">Geannuleerd</div>
         <div class="dialog-desc" id="cancelText">
-          <strong>Ryany</strong> wordt niet verwijderd.<br>
+          <strong>FamApp</strong> wordt niet verwijderd.<br>
           Goede keuze.
         </div>
       </div>
@@ -242,7 +242,7 @@
         <div class="dialog-title">Wacht even.</div>
         <div class="dialog-desc">
           Je drukte op annuleren, maar het systeem heeft iets gevonden.<br><br>
-          <strong>Ryany</strong> heeft een beveiligingsstatus.<br>
+          Account <strong>Ryany</strong> heeft een beveiligingsstatus.<br>
           <span class="soft">Verwijdering wordt uitgevoerd om onbekende reden.</span>
         </div>
       </div>
@@ -265,7 +265,7 @@
       <div class="dialog-text">
         <div class="dialog-title">Bezig met verwijderen...</div>
         <div class="dialog-desc">
-          <strong>Ryany</strong> wordt permanent verwijderd.<br>
+          <strong>FamApp</strong> wordt permanent verwijderd.<br>
           <span class="warn">Sluit dit venster niet.</span>
         </div>
       </div>
@@ -334,12 +334,12 @@ async function cancelDelete() {
 
   // Text slowly changes...
   sndPause();
-  document.getElementById('cancelText').innerHTML = '<strong>Ryany</strong> wordt niet verwijderd.<br><span class="delay">Goede keuze.</span>';
+  document.getElementById('cancelText').innerHTML = '<strong>FamApp</strong> wordt niet verwijderd.<br><span class="delay">Goede keuze.</span>';
   await new Promise(r => setTimeout(r, 2500));
 
   // Uneasy
   sndUneasy();
-  document.getElementById('cancelText').innerHTML = '<strong>Ryany</strong> wordt niet verwijderd.<br><span class="delay">...</span>';
+  document.getElementById('cancelText').innerHTML = '<strong>FamApp</strong> wordt niet verwijderd.<br><span class="delay">...</span>';
   await new Promise(r => setTimeout(r, 2000));
 
   // Something is wrong
@@ -388,20 +388,20 @@ async function runProgress(barId, labelId, stopBtnId) {
   const label = document.getElementById(labelId);
 
   const steps = [
-    { p: 3, t: "Bestanden doorzoeken...", d: 2000 },
+    { p: 3, t: "App-data doorzoeken...", d: 2000 },
     { p: 8, t: "223 gedeelde herinneringen gevonden", d: 2800 },
     { p: 14, t: "Herinnering 'kerst 2019' proberen te wissen...", d: 2500 },
     { p: 19, t: "Geweigerd. Die was te leuk.", d: 2800 },
     { p: 24, t: "Herinnering 'samen lachen om niks' proberen...", d: 2500 },
     { p: 29, t: "Geweigerd. Kon niet verwijderd worden.", d: 2800 },
-    { p: 34, t: "847 foto's doorzoeken...", d: 2200 },
-    { p: 40, t: "Foto's kunnen niet gewist worden. Te belangrijk.", d: 3000 },
+    { p: 34, t: "Gebruiker 'Ryany' analyseren...", d: 2200 },
+    { p: 40, t: "Profiel: te belangrijk om te verwijderen.", d: 3000 },
     { p: 46, t: "Zoektocht naar reden om te verwijderen...", d: 2500 },
     { p: 50, t: "Geen reden gevonden.", d: 2500 },
     { p: 55, t: "Agent-status controleren...", d: 2200 },
     { p: 60, t: "Toekomstig agent. Verwijdering verboden.", d: 3000 },
-    { p: 66, t: "34 gedeelde geheimen gevonden", d: 2500 },
-    { p: 72, t: "Geheimen weigeren verwijderd te worden.", d: 2800 },
+    { p: 66, t: "Profiel-score berekenen...", d: 2500 },
+    { p: 72, t: "Score: ∞. Verwijdering onmogelijk.", d: 2800 },
     { p: 77, t: "Systeem probeert het toch...", d: 2500 },
     { p: 82, t: "Geweigerd. Alles weigert.", d: 3000 },
     { p: 87, t: "Verwijdering onmogelijk. Binding te sterk.", d: 3000 },
@@ -435,7 +435,7 @@ async function showReveal() {
   revealEl.classList.add('show');
 
   const text = document.getElementById('revealText');
-  text.innerHTML = 'Foutcode: <strong>TE_LIEF_OM_TE_VERWIJDEREN</strong>';
+  text.innerHTML = 'Foutcode: <strong>TE_IMPORTANT_OM_TE_VERWIJDEREN</strong>';
 
   sndReveal();
   spawnConfetti(50);
@@ -446,8 +446,8 @@ async function showReveal() {
   text.innerHTML += '<br><br>Het systeem probeerde het. Echt.';
   await new Promise(r => setTimeout(r, 2500));
 
-  // Line 3 — the punch
-  text.innerHTML += '<br>Maar <span class="acc">liefste zus ter wereld</span> is een beschermd bestand.';
+  // Line 3 — the punch (shift from app to person)
+  text.innerHTML += '<br>Maar <span class="acc">liefste zus ter wereld</span> is geen app die je zomaar verwijdert.';
   await new Promise(r => setTimeout(r, 3000));
 
   // Line 4 — the sincere one
