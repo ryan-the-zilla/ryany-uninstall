@@ -1,485 +1,488 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>ryan-the-zilla.github.io</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{overflow:hidden;height:100%;-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;background:#fff}
-
-/* === SAFARI ERROR === */
-.safari{
-  position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:40px 24px;color:#1d1d1f;z-index:1;
-}
-.safari.hidden{display:none}
-.sf-emoji{font-size:48px;margin-bottom:14px;opacity:0.65}
-.sf-h{font-size:17px;font-weight:600;color:#1d1d1f;margin-bottom:2px;letter-spacing:-0.2px}
-.sf-url{font-size:13px;color:#8e8e93;margin-bottom:18px}
-.sf-code{font-size:12px;color:#8e8e93;font-family:'SF Mono',Menlo,monospace;margin-bottom:4px}
-.sf-body{font-size:14px;color:#8e8e93;line-height:1.5;max-width:360px}
-.sf-body strong{color:#1d1d1f;font-weight:500}
-.sf-foot{margin-top:20px;font-size:11px;color:#c7c7cc;font-family:'SF Mono',Menlo,monospace}
-
-/* Reload button */
-.sf-reload{
-  margin-top:24px;padding:10px 28px;font-size:15px;font-family:inherit;
-  background:#007aff;color:#fff;border:none;border-radius:10px;
-  cursor:pointer;font-weight:500;letter-spacing:-0.2px;
-  transition:background 0.15s,transform 0.1s;
-}
-.sf-reload:active{background:#0062d1;transform:scale(0.97)}
-
-/* Loading spinner */
-.sf-spinner{
-  display:none;margin-top:20px;
-  width:24px;height:24px;border:2.5px solid #e5e5ea;border-top-color:#007aff;
-  border-radius:50%;animation:spin 0.8s linear infinite;
-}
-.sf-spinner.show{display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.sf-h.glitch{animation:gl 0.25s ease}
-@keyframes gl{0%{transform:translate(0)}20%{transform:translate(-2px,1px);opacity:0.7}50%{transform:translate(2px,-1px);opacity:0.9}80%{transform:translate(-1px,1px)}100%{transform:translate(0);opacity:1}}
-.shake{animation:sk 0.35s ease}
-@keyframes sk{0%,100%{transform:translate(0)}15%{transform:translate(-3px,2px)}35%{transform:translate(3px,-2px)}55%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}}
-
-/* === iOS ALERT === */
-.alert-bg{
-  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.32);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  z-index:50;align-items:center;justify-content:center;padding:20px;
-}
-.alert-bg.show{display:flex}
-
-.alert-box{
-  background:rgba(255,255,255,0.98);border-radius:14px;width:100%;max-width:270px;
-  overflow:hidden;animation:aIn 0.22s cubic-bezier(0.36,0.66,0.5,1);
-  box-shadow:0 20px 60px rgba(0,0,0,0.2),0 0 0 0.5px rgba(0,0,0,0.08);
-}
-@keyframes aIn{from{transform:scale(1.08);opacity:0}to{transform:scale(1);opacity:1}}
-
-.alert-top{padding:20px 16px 16px;text-align:center}
-.alert-icon{font-size:36px;margin-bottom:8px;line-height:1}
-.alert-title{font-size:13px;font-weight:600;color:#1d1d1f;margin-bottom:4px;letter-spacing:-0.1px}
-.alert-desc{font-size:12px;color:#8e8e93;line-height:1.45}
-.alert-desc strong{color:#1d1d1f;font-weight:500}
-.alert-desc .red{color:#ff3b30;font-weight:500}
-.alert-desc .gray{color:#aeaeb2}
-
-.alert-divider{height:0.5px;background:rgba(60,60,67,0.12);margin:0}
-
-.alert-buttons{display:flex;flex-direction:column}
-.alert-btn{
-  width:100%;padding:11px 16px;font-size:13px;font-family:inherit;
-  border:none;background:none;cursor:pointer;text-align:center;
-  letter-spacing:-0.1px;transition:background 0.12s;
-}
-.alert-btn:active{background:rgba(0,0,0,0.06)}
-.alert-btn.bold{font-weight:600;color:#007aff}
-.alert-btn.red{font-weight:600;color:#ff3b30}
-.alert-btn:disabled{color:#c7c7cc;pointer-events:none}
-
-.alert-progress{padding:0 16px 14px;display:none}
-.alert-progress.show{display:block}
-.ap-track{width:100%;height:3px;background:#e5e5ea;border-radius:1.5px;overflow:hidden}
-.ap-fill{height:100%;background:#007aff;border-radius:1.5px;width:0%;transition:width 0.3s}
-.ap-text{font-size:11px;color:#8e8e93;margin-top:7px;text-align:center}
-
-/* Stop btn — hidden until enabled */
-.alert-stop{display:none;padding:0 16px 12px;text-align:center}
-.alert-stop.show{display:block}
-.alert-stop-btn{
-  font-size:11px;font-family:inherit;color:#8e8e93;border:none;background:none;
-  cursor:pointer;padding:4px 12px;transition:color 0.2s;
-}
-.alert-stop-btn:active{color:#636366}
-.alert-stop-btn:disabled{color:#d1d1d6;pointer-events:none}
-
-/* Blocked popup */
-.blocked-box{max-width:240px}
-
-/* Reveal — same alert box, warm shift */
-.alert-box.warm{
-  background:rgba(255,252,245,0.98);
-  box-shadow:0 20px 60px rgba(180,140,40,0.15),0 0 0 0.5px rgba(180,140,40,0.1);
-}
-.warm .alert-title{color:#8b6914}
-.warm .alert-desc{color:#6b5d4d}
-.warm .alert-desc .gold{color:#b8922e;font-weight:600}
-.warm .alert-desc .sincere{color:#3d3529;font-style:italic}
-.warm .alert-btn{color:#b8922e}
-
-.confetti{position:fixed;top:-10px;z-index:201;pointer-events:none;animation:cF linear forwards}
-@keyframes cF{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
-
-@media(max-width:600px){
-  .alert-box{max-width:85%}
-}
-</style>
-</head>
-<body>
-
-<!-- Safari Error -->
-<div class="safari" id="safari">
-  <div class="sf-emoji" id="sfE">😕</div>
-  <div class="sf-h" id="sfH">Deze site kan niet worden bereikt</div>
-  <div class="sf-url">ryan-the-zilla.github.io</div>
-  <div class="sf-code" id="sfC">ERR_CONNECTION_REFUSED</div>
-  <div class="sf-body" id="sfB"><strong>ryan-the-zilla.github.io</strong> heeft de verbinding geweigerd.</div>
-  <div class="sf-foot" id="sfF">Foutdetails: CONNECTION_REFUSED — Poort 443</div>
-  <div class="sf-spinner" id="sfSpin"></div>
-  <button class="sf-reload" id="reloadBtn" onclick="startMorph()">Probeer opnieuw</button>
-</div>
-
-<!-- Alert 1: Confirm delete -->
-<div class="alert-bg" id="a1">
-  <div class="alert-box">
-    <div class="alert-top">
-      <div class="alert-icon">🗑️</div>
-      <div class="alert-title">Ryany verwijderen?</div>
-      <div class="alert-desc">
-        Weet je zeker dat je <strong>Ryany</strong> uit het systeem wilt verwijderen?<br><br>
-        Soort: <strong>Zus (19)</strong><br>
-        Rol: <strong>Liefste zus ter wereld</strong><br><br>
-        <span class="red">Deze actie kan niet ongedaan worden gemaakt.</span>
-      </div>
-    </div>
-    <div class="alert-divider"></div>
-    <div class="alert-buttons">
-      <button class="alert-btn red" onclick="startDelete()">Verwijderen</button>
-      <div class="alert-divider"></div>
-      <button class="alert-btn bold" onclick="cancelDelete()">Annuleren</button>
-    </div>
-  </div>
-</div>
-
-<!-- Alert 2: Cancelled calm -->
-<div class="alert-bg" id="a2">
-  <div class="alert-box">
-    <div class="alert-top">
-      <div class="alert-icon" id="a2Icon">✅</div>
-      <div class="alert-title">Geannuleerd</div>
-      <div class="alert-desc" id="a2Text"><strong>Ryany</strong> wordt niet verwijderd.<br>Goede keuze.</div>
-    </div>
-    <div class="alert-divider"></div>
-    <div class="alert-buttons">
-      <button class="alert-btn bold" id="a2Btn" onclick="void(0)">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- Alert 2b: System override -->
-<div class="alert-bg" id="a2b">
-  <div class="alert-box">
-    <div class="alert-top">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-title">Systeemwaarschuwing</div>
-      <div class="alert-desc">
-        Je drukte op annuleren, maar <strong>Ryany</strong> heeft een beveiligingsstatus.<br>
-        <span class="gray">Verwijdering wordt uitgevoerd.</span>
-      </div>
-    </div>
-    <div class="alert-progress show">
-      <div class="ap-track"><div class="ap-fill" id="pbar"></div></div>
-      <div class="ap-text" id="pLbl">Voorbereiden...</div>
-    </div>
-    <div class="alert-stop" id="stopA">
-      <button class="alert-stop-btn" id="stopBtn" onclick="tryStop()">Annuleren</button>
-    </div>
-  </div>
-</div>
-
-<!-- Alert 3: Delete progress -->
-<div class="alert-bg" id="a3">
-  <div class="alert-box">
-    <div class="alert-top">
-      <div class="alert-icon">🗑️</div>
-      <div class="alert-title">Bezig met verwijderen...</div>
-      <div class="alert-desc"><strong>Ryany</strong> wordt permanent verwijderd.<br><span class="red">Sluit dit venster niet.</span></div>
-    </div>
-    <div class="alert-progress show">
-      <div class="ap-track"><div class="ap-fill" id="pbar3"></div></div>
-      <div class="ap-text" id="pLbl3">Voorbereiden...</div>
-    </div>
-    <div class="alert-stop" id="stopA3">
-      <button class="alert-stop-btn" id="stopBtn3" onclick="tryStop3()">Annuleren</button>
-    </div>
-  </div>
-</div>
-
-<!-- Alert 4: Blocked popup -->
-<div class="alert-bg" id="a4" style="z-index:60">
-  <div class="alert-box blocked-box">
-    <div class="alert-top">
-      <div class="alert-icon">🚫</div>
-      <div class="alert-title">Verwijdering blokkeren</div>
-      <div class="alert-desc" id="a4Text">Je mag dit proces niet stoppen.</div>
-    </div>
-    <div class="alert-divider"></div>
-    <div class="alert-buttons">
-      <button class="alert-btn bold" onclick="closeBlocked()">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- Alert 5: Reveal (same box, warm) -->
-<div class="alert-bg" id="a5">
-  <div class="alert-box warm" id="a5box">
-    <div class="alert-top">
-      <div class="alert-icon">🏆</div>
-      <div class="alert-title">Verwijdering mislukt.</div>
-      <div class="alert-desc" id="rText"></div>
-    </div>
-    <div class="alert-divider"></div>
-    <div class="alert-buttons">
-      <button class="alert-btn bold" id="trapBtn" onclick="trapClick()">OK</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// === SOUND ===
-const AC=window.AudioContext||window.webkitAudioContext;let ax;
-function ia(){if(!ax)ax=new AC()}
-function bp(f,d,t='square',v=0.07){if(!ax)return;const o=ax.createOscillator(),g=ax.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ax.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,ax.currentTime+d/1000);o.stop(ax.currentTime+d/1000)}
-function sGl(){bp(150+Math.random()*100,55,'sawtooth',0.05)}
-function sDlg(){bp(400,50,'sine',0.05)}
-function sCan(){bp(600,70,'sine',0.07);setTimeout(()=>bp(800,50,'sine',0.05),80)}
-function sUn(){bp(300,160,'sawtooth',0.04)}
-function sPr(){bp(500+Math.random()*200,35,'sine',0.03)}
-function sWr(){bp(250,100,'sawtooth',0.06)}
-function sFl(){for(let i=0;i<3;i++)setTimeout(()=>bp(300-i*60,50,'square',0.07),i*70)}
-function sPa(){bp(800,40,'square',0.09)}
-function sRv(){bp(523,70,'sine',0.09);setTimeout(()=>bp(659,70,'sine',0.09),90);setTimeout(()=>bp(784,90,'sine',0.11),180);setTimeout(()=>bp(1047,100,'sine',0.13),280)}
-function sTr(){bp(200,50,'square',0.05)}
-function sPs(){bp(200,250,'sine',0.025)}
-function sMr(){for(let i=0;i<4;i++)setTimeout(()=>bp(200+i*80,45,'sawtooth',0.035),i*50)}
-document.addEventListener('click',ia,{once:true});document.addEventListener('touchstart',ia,{once:true});document.addEventListener('keydown',ia,{once:true});
-
-function showA(id){document.querySelectorAll('.alert-bg').forEach(o=>o.classList.remove('show'));document.getElementById(id).classList.add('show')}
-function hideA(id){document.getElementById(id).classList.remove('show')}
-
-// === MORPH TRIGGER (auto + manual) ===
-let morphStarted=false;
-function startMorph(){
-  if(morphStarted)return;
-  morphStarted=true;
-  const spin=document.getElementById('sfSpin');
-  spin.classList.add('show');
-  setTimeout(runErrorMorph,1500);
-}
-// Auto-start after 2.5s regardless — reload button stays visible as excuse
-setTimeout(startMorph,2500);
-
-// === ERROR MORPH ===
-async function glitch(id){const e=document.getElementById(id);e.classList.add('glitch');sGl();await new Promise(r=>setTimeout(r,250));e.classList.remove('glitch')}
-
-async function runErrorMorph(){
-  const t=document.getElementById('sfH'),c=document.getElementById('sfC'),
-    b=document.getElementById('sfB'),f=document.getElementById('sfF'),
-    ic=document.getElementById('sfE'),sp=document.getElementById('sfSpin');
-
-  sp.classList.remove('show');
-  const rb=document.getElementById('reloadBtn');
-  if(rb)rb.style.display='none';
-
-  // Still looks like error... then micro-glitch
-  await new Promise(r=>setTimeout(r,1500));
-  await glitch('sfH');
-  await new Promise(r=>setTimeout(r,1500));
-
-  // "site" → "zus"
-  await glitch('sfH');
-  t.textContent='Deze zus kan niet worden bereikt';sMr();
-  await new Promise(r=>setTimeout(r,1200));
-
-  // Revert — she thinks she imagined it
-  await glitch('sfH');
-  t.textContent='Deze site kan niet worden bereikt';
-  c.textContent='ERR_CONNECTION_REFUSED';
-  await new Promise(r=>setTimeout(r,2000));
-
-  // Bigger glitch
-  document.body.classList.add('shake');sGl();await new Promise(r=>setTimeout(r,350));document.body.classList.remove('shake');
-  c.textContent='ERR_SISTE_NOT_FOUND';c.style.color='#ff3b30';
-  await new Promise(r=>setTimeout(r,1000));
-
-  f.textContent='Foutdetails: SUBJEKT_RYANY — Verwijdering in behandeling';
-  f.style.color='#ff3b30';sMr();
-  await new Promise(r=>setTimeout(r,1500));
-
-  ic.textContent='⚠️';
-  await new Promise(r=>setTimeout(r,800));
-
-  // Full morph
-  document.body.classList.add('shake');sGl();sGl();
-  t.textContent='Ryany verwijderen?';
-  t.style.color='#ff3b30';t.style.fontWeight='600';
-  c.textContent='VERWIJDEREN_BEVESTIGEN';
-  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#ff3b30;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
-  await new Promise(r=>setTimeout(r,400));document.body.classList.remove('shake');
-  await new Promise(r=>setTimeout(r,1500));
-
-  // Irritanste glitch
-  document.body.classList.add('shake');sGl();
-  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong style="color:#ff3b30;">Irritanste zus ter wereld</strong><br><br><span style="color:#ff3b30;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
-  await new Promise(r=>setTimeout(r,700));document.body.classList.remove('shake');
-  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#ff3b30;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
-  await new Promise(r=>setTimeout(r,1200));
-
-  // Buttons on error page
-  const btns=document.createElement('div');
-  btns.style.cssText='margin-top:24px;display:flex;gap:10px;justify-content:center;';
-  btns.innerHTML='<button onclick="cancelDelete()" style="display:inline-block;width:auto;padding:10px 28px;font-size:14px;font-weight:600;border:0.5px solid rgba(0,122,255,0.2);border-radius:10px;background:rgba(0,122,255,0.08);color:#007aff;cursor:pointer;">Annuleren</button><button onclick="startDelete()" style="display:inline-block;width:auto;padding:10px 28px;font-size:14px;font-weight:600;border:0.5px solid rgba(255,59,48,0.2);border-radius:10px;background:rgba(255,59,48,0.08);color:#ff3b30;cursor:pointer;">Verwijderen</button>';
-  b.appendChild(btns);
-  f.style.display='none';
-  sDlg();
-}
-
-// === ROUTES ===
-async function cancelDelete(){
-  sCan();showA('a2');
-  await new Promise(r=>setTimeout(r,2000));
-  sPs();
-  document.getElementById('a2Text').innerHTML='<strong>Ryany</strong> wordt niet verwijderd.<br><span style="color:#aeaeb2;">Goede keuze.</span>';
-  await new Promise(r=>setTimeout(r,1800));
-  sUn();
-  document.getElementById('a2Text').innerHTML='<strong>Ryany</strong> wordt niet verwijderd.<br><span style="color:#aeaeb2;">...</span>';
-  document.getElementById('a2Icon').textContent='😐';
-  await new Promise(r=>setTimeout(r,1500));
-  sUn();
-  document.getElementById('a2Text').innerHTML='<span style="color:#ff3b30;">Er gebeurt iets.</span><br><span style="color:#aeaeb2;">Je drukte op annuleren, maar...</span>';
-  document.getElementById('a2Icon').textContent='⚠️';
-  await new Promise(r=>setTimeout(r,1800));
-  sDlg();showA('a2b');
-  runProgress('pbar','pLbl','stopBtn','stopA');
-}
-
-async function startDelete(){sDlg();showA('a3');runProgress('pbar3','pLbl3','stopBtn3','stopA3')}
-
-// === STOP BUTTONS ===
-let pc=0,pc3=0;
-let blockedCb=null;
-
-function tryStop(){
-  sPa();pc++;
-  const b=document.getElementById('stopBtn');
-  if(pc===1) showBlocked('Je mag dit proces niet stoppen.',()=>{b.textContent='Geweigerd';b.style.color='#c7c7cc'});
-  else if(pc===2) showBlocked('Het systeem luistert niet naar je.',()=>{b.textContent='Systeem luistert niet';b.style.color='#c7c7cc'});
-  else{b.disabled=true;b.textContent='Geblokkeerd';b.style.color='#d1d1d6';sFl()}
-}
-
-function tryStop3(){
-  sPa();pc3++;
-  const b=document.getElementById('stopBtn3');
-  if(pc3===1) showBlocked('Te laat om te stoppen.',()=>{b.textContent='Geweigerd';b.style.color='#c7c7cc'});
-  else if(pc3===2) showBlocked('Het systeem weigert.',()=>{b.textContent='Systeem weigert';b.style.color='#c7c7cc'});
-  else{b.disabled=true;b.textContent='Onmogelijk';b.style.color='#d1d1d6';sFl()}
-}
-
-function showBlocked(msg,cb){
-  document.getElementById('a4Text').textContent=msg;
-  document.getElementById('a4').classList.add('show');
-  blockedCb=cb;
-}
-function closeBlocked(){
-  document.getElementById('a4').classList.remove('show');
-  if(blockedCb){blockedCb();blockedCb=null}
-}
-
-// === PROGRESS ===
-async function runProgress(bid,lid,sid,pid){
-  const bar=document.getElementById(bid),lbl=document.getElementById(lid);
-  // Show stop button after 3s delay (no ghost clicks)
-  setTimeout(()=>{
-    const p=document.getElementById(pid);
-    if(p)p.classList.add('show');
-  },3000);
-
-  const steps=[
-    {p:5,t:"Bestanden doorzoeken...",d:1200},
-    {p:12,t:"223 gedeelde herinneringen gevonden",d:1400},
-    {p:18,t:"Herinnering 'kerst 2019' proberen te wissen...",d:1300},
-    {p:24,t:"Geweigerd. Die was te leuk.",d:1400},
-    {p:30,t:"Herinnering 'samen lachen om niks' proberen...",d:1300},
-    {p:36,t:"Geweigerd. Kon niet verwijderd worden.",d:1400},
-    {p:42,t:"Profiel analyseren...",d:1100},
-    {p:48,t:"Te belangrijk om te verwijderen.",d:1400},
-    {p:54,t:"Zoektocht naar reden om te verwijderen...",d:1200},
-    {p:58,t:"Geen reden gevonden.",d:1200},
-    {p:63,t:"Agent-status controleren...",d:1100},
-    {p:68,t:"Toekomstig agent. Verwijdering verboden.",d:1400},
-    {p:74,t:"Profiel-score berekenen...",d:1200},
-    {p:80,t:"Score: ∞. Verwijdering onmogelijk.",d:1400},
-    {p:85,t:"Systeem probeert het toch...",d:1200},
-    {p:90,t:"Geweigerd. Alles weigert.",d:1400},
-    {p:95,t:"Binding te sterk. Onmogelijk.",d:1300},
-    {p:100,t:"Verwijdering afgebroken.",d:1400},
-  ];
-  for(const s of steps){
-    bar.style.width=s.p+'%';lbl.textContent=s.t;
-    if(s.p>80){bar.style.background='#ff3b30';sFl()}
-    else if(s.p>60){bar.style.background='#ff9500';sWr()}
-    else{bar.style.background='#007aff';sPr()}
-    await new Promise(r=>setTimeout(r,s.d));
-  }
-  const sb=document.getElementById(sid);if(sb){sb.disabled=true;sb.style.opacity='0.3'}
-  await new Promise(r=>setTimeout(r,1000));
-  showReveal();
-}
-
-// === REVEAL ===
-async function showReveal(){
-  document.querySelectorAll('.alert-bg').forEach(o=>o.classList.remove('show'));
-  document.getElementById('safari').classList.add('hidden');
-  document.getElementById('a5').classList.add('show');
-
-  const t=document.getElementById('rText');
-  t.innerHTML='Foutcode: <span class="gold">TE_LIEF_OM_TE_VERWIJDEREN</span>';
-  sRv();spawnConfetti(30);
-  await new Promise(r=>setTimeout(r,2200));
-
-  t.innerHTML+='<br><br><span class="sincere">Het systeem probeerde het. Echt.</span>';
-  await new Promise(r=>setTimeout(r,1800));
-
-  t.innerHTML+='<br>Maar <span class="gold">liefste zus ter wereld</span> is niet zomaar te verwijderen.';
-  spawnConfetti(15);
-  await new Promise(r=>setTimeout(r,2200));
-
-  t.innerHTML+='<br><br><span class="sincere">En tussen twee haakjes — sorry dat ik je soms pest.</span>';
-  await new Promise(r=>setTimeout(r,1500));
-
-  t.innerHTML+='<br><span class="sincere">Je verdient het. Maar toch. Sorry.</span>';
-  await new Promise(r=>setTimeout(r,1800));
-
-  t.innerHTML+='<br><br>Verwijdering: <span class="gold">permanent geblokkeerd</span>.';
-  spawnConfetti(20);
-}
-
-function spawnConfetti(n){
-  const cols=['#d4a853','#e8c97a','#ff9500','#ff3b30','#28c840','#007aff'];
-  for(let i=0;i<n;i++){setTimeout(()=>{const c=document.createElement('div');c.className='confetti';const s=3+Math.random()*5;c.style.left=Math.random()*100+'vw';c.style.width=s+'px';c.style.height=s+'px';c.style.background=cols[Math.floor(Math.random()*cols.length)];c.style.borderRadius=Math.random()>0.5?'50%':'1px';c.style.animationDuration=(2+Math.random()*3)+'s';c.style.opacity=0.5+Math.random()*0.5;document.body.appendChild(c);setTimeout(()=>c.remove(),5500)},i*35)}
-}
-
-const trapMsgs=[
-  "Beschermd. Sinds geboorte.",
-  "Verwijderen onmogelijk.",
-  "Ryany blijft. Deal ermee.",
-  "Fout: te belangrijk.",
-  "Agent-status: beschermd.",
-  "Zelfs de politie kan dit niet.",
-];
-let ti=0;
-function trapClick(){
-  const btn=document.getElementById('trapBtn');
-  btn.textContent=trapMsgs[ti%trapMsgs.length];
-  btn.style.fontSize='11px';
-  ti++;sTr();spawnConfetti(6);
-}
+     1|<!DOCTYPE html>
+     2|<html lang="nl">
+     3|<head>
+     4|<meta charset="UTF-8">
+     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+     6|<title>ryan-the-zilla.github.io</title>
+     7|<style>
+     8|*{margin:0;padding:0;box-sizing:border-box}
+     9|html,body{overflow:hidden;height:100%;-webkit-text-size-adjust:100%}
+    10|body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;background:#fff}
+    11|
+    12|/* === SAFARI ERROR === */
+    13|.safari{
+    14|  position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;
+    15|  display:flex;flex-direction:column;align-items:center;justify-content:center;
+    16|  text-align:center;padding:40px 24px;color:#1d1d1f;z-index:1;
+    17|}
+    18|.safari.hidden{display:none}
+    19|.sf-emoji{font-size:48px;margin-bottom:14px;opacity:0.65}
+    20|.sf-h{font-size:17px;font-weight:600;color:#1d1d1f;margin-bottom:2px;letter-spacing:-0.2px}
+    21|.sf-url{font-size:13px;color:#8e8e93;margin-bottom:18px}
+    22|.sf-code{font-size:12px;color:#8e8e93;font-family:'SF Mono',Menlo,monospace;margin-bottom:4px}
+    23|.sf-body{font-size:14px;color:#8e8e93;line-height:1.5;max-width:360px}
+    24|.sf-body strong{color:#1d1d1f;font-weight:500}
+    25|.sf-foot{margin-top:20px;font-size:11px;color:#c7c7cc;font-family:'SF Mono',Menlo,monospace}
+    26|
+    27|/* Reload button */
+    28|.sf-reload{
+    29|  margin-top:24px;padding:10px 28px;font-size:15px;font-family:inherit;
+    30|  background:#007aff;color:#fff;border:none;border-radius:10px;
+    31|  cursor:pointer;font-weight:500;letter-spacing:-0.2px;
+    32|  transition:background 0.15s,transform 0.1s;
+    33|}
+    34|.sf-reload:active{background:#0062d1;transform:scale(0.97)}
+    35|
+    36|/* Loading spinner */
+    37|.sf-spinner{
+    38|  display:none;margin-top:20px;
+    39|  width:24px;height:24px;border:2.5px solid #e5e5ea;border-top-color:#007aff;
+    40|  border-radius:50%;animation:spin 0.8s linear infinite;
+    41|}
+    42|.sf-spinner.show{display:inline-block}
+    43|@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes faahPulse{0%{transform:scale(0.3);opacity:0}50%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+    44|
+    45|.sf-h.glitch{animation:gl 0.25s ease}
+    46|@keyframes gl{0%{transform:translate(0)}20%{transform:translate(-2px,1px);opacity:0.7}50%{transform:translate(2px,-1px);opacity:0.9}80%{transform:translate(-1px,1px)}100%{transform:translate(0);opacity:1}}
+    47|.shake{animation:sk 0.35s ease}
+    48|@keyframes sk{0%,100%{transform:translate(0)}15%{transform:translate(-3px,2px)}35%{transform:translate(3px,-2px)}55%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}}
+    49|
+    50|/* === iOS ALERT === */
+    51|.alert-bg{
+    52|  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    53|  background:rgba(0,0,0,0.32);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    54|  z-index:50;align-items:center;justify-content:center;padding:20px;
+    55|}
+    56|.alert-bg.show{display:flex}
+    57|
+    58|.alert-box{
+    59|  background:rgba(255,255,255,0.98);border-radius:14px;width:100%;max-width:270px;
+    60|  overflow:hidden;animation:aIn 0.22s cubic-bezier(0.36,0.66,0.5,1);
+    61|  box-shadow:0 20px 60px rgba(0,0,0,0.2),0 0 0 0.5px rgba(0,0,0,0.08);
+    62|}
+    63|@keyframes aIn{from{transform:scale(1.08);opacity:0}to{transform:scale(1);opacity:1}}
+    64|
+    65|.alert-top{padding:20px 16px 16px;text-align:center}
+    66|.alert-icon{font-size:36px;margin-bottom:8px;line-height:1}
+    67|.alert-title{font-size:13px;font-weight:600;color:#1d1d1f;margin-bottom:4px;letter-spacing:-0.1px}
+    68|.alert-desc{font-size:12px;color:#8e8e93;line-height:1.45}
+    69|.alert-desc strong{color:#1d1d1f;font-weight:500}
+    70|.alert-desc .red{color:#ff3b30;font-weight:500}
+    71|.alert-desc .gray{color:#aeaeb2}
+    72|
+    73|.alert-divider{height:0.5px;background:rgba(60,60,67,0.12);margin:0}
+    74|
+    75|.alert-buttons{display:flex;flex-direction:column}
+    76|.alert-btn{
+    77|  width:100%;padding:11px 16px;font-size:13px;font-family:inherit;
+    78|  border:none;background:none;cursor:pointer;text-align:center;
+    79|  letter-spacing:-0.1px;transition:background 0.12s;
+    80|}
+    81|.alert-btn:active{background:rgba(0,0,0,0.06)}
+    82|.alert-btn.bold{font-weight:600;color:#007aff}
+    83|.alert-btn.red{font-weight:600;color:#ff3b30}
+    84|.alert-btn:disabled{color:#c7c7cc;pointer-events:none}
+    85|
+    86|.alert-progress{padding:0 16px 14px;display:none}
+    87|.alert-progress.show{display:block}
+    88|.ap-track{width:100%;height:3px;background:#e5e5ea;border-radius:1.5px;overflow:hidden}
+    89|.ap-fill{height:100%;background:#007aff;border-radius:1.5px;width:0%;transition:width 0.3s}
+    90|.ap-text{font-size:11px;color:#8e8e93;margin-top:7px;text-align:center}
+    91|
+    92|/* Stop btn — hidden until enabled */
+    93|.alert-stop{display:none;padding:0 16px 12px;text-align:center}
+    94|.alert-stop.show{display:block}
+    95|.alert-stop-btn{
+    96|  font-size:11px;font-family:inherit;color:#8e8e93;border:none;background:none;
+    97|  cursor:pointer;padding:4px 12px;transition:color 0.2s;
+    98|}
+    99|.alert-stop-btn:active{color:#636366}
+   100|.alert-stop-btn:disabled{color:#d1d1d6;pointer-events:none}
+   101|
+   102|/* Blocked popup */
+   103|.blocked-box{max-width:240px}
+   104|
+   105|/* Reveal — same alert box, warm shift */
+   106|.alert-box.warm{
+   107|  background:rgba(255,252,245,0.98);
+   108|  box-shadow:0 20px 60px rgba(180,140,40,0.15),0 0 0 0.5px rgba(180,140,40,0.1);
+   109|}
+   110|.warm .alert-title{color:#8b6914}
+   111|.warm .alert-desc{color:#6b5d4d}
+   112|.warm .alert-desc .gold{color:#b8922e;font-weight:600}
+   113|.warm .alert-desc .sincere{color:#3d3529;font-style:italic}
+   114|.warm .alert-btn{color:#b8922e}
+   115|
+   116|.confetti{position:fixed;top:-10px;z-index:201;pointer-events:none;animation:cF linear forwards}
+   117|@keyframes cF{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+   118|
+   119|@media(max-width:600px){
+   120|  .alert-box{max-width:85%}
+   121|}
+   122|</style>
+   123|</head>
+   124|<body>
+   125|
+   126|<!-- Safari Error -->
+   127|<div class="safari" id="safari">
+   128|  <div class="sf-emoji" id="sfE">😕</div>
+   129|  <div class="sf-h" id="sfH">Deze site kan niet worden bereikt</div>
+   130|  <div class="sf-url">ryan-the-zilla.github.io</div>
+   131|  <div class="sf-code" id="sfC">ERR_CONNECTION_REFUSED</div>
+   132|  <div class="sf-body" id="sfB"><strong>ryan-the-zilla.github.io</strong> heeft de verbinding geweigerd.</div>
+   133|  <div class="sf-foot" id="sfF">Foutdetails: CONNECTION_REFUSED — Poort 443</div>
+   134|  <div class="sf-spinner" id="sfSpin"></div>
+   135|  <button class="sf-reload" id="reloadBtn" onclick="startMorph()">Probeer opnieuw</button>
+   136|</div>
+   137|
+   138|<!-- Alert 1: Confirm delete -->
+   139|<div class="alert-bg" id="a1">
+   140|  <div class="alert-box">
+   141|    <div class="alert-top">
+   142|      <div class="alert-icon">🗑️</div>
+   143|      <div class="alert-title">Ryany verwijderen?</div>
+   144|      <div class="alert-desc">
+   145|        Weet je zeker dat je <strong>Ryany</strong> uit het systeem wilt verwijderen?<br><br>
+   146|        Soort: <strong>Zus (19)</strong><br>
+   147|        Rol: <strong>Liefste zus ter wereld</strong><br><br>
+   148|        <span class="red">Deze actie kan niet ongedaan worden gemaakt.</span>
+   149|      </div>
+   150|    </div>
+   151|    <div class="alert-divider"></div>
+   152|    <div class="alert-buttons">
+   153|      <button class="alert-btn red" onclick="startDelete()">Verwijderen</button>
+   154|      <div class="alert-divider"></div>
+   155|      <button class="alert-btn bold" onclick="cancelDelete()">Annuleren</button>
+   156|    </div>
+   157|  </div>
+   158|</div>
+   159|
+   160|<!-- Alert 2: Cancelled calm -->
+   161|<div class="alert-bg" id="a2">
+   162|  <div class="alert-box">
+   163|    <div class="alert-top">
+   164|      <div class="alert-icon" id="a2Icon">✅</div>
+   165|      <div class="alert-title">Geannuleerd</div>
+   166|      <div class="alert-desc" id="a2Text"><strong>Ryany</strong> wordt niet verwijderd.<br>Goede keuze.</div>
+   167|    </div>
+   168|    <div class="alert-divider"></div>
+   169|    <div class="alert-buttons">
+   170|      <button class="alert-btn bold" id="a2Btn" onclick="void(0)">OK</button>
+   171|    </div>
+   172|  </div>
+   173|</div>
+   174|
+   175|<!-- Alert 2b: System override -->
+   176|<div class="alert-bg" id="a2b">
+   177|  <div class="alert-box">
+   178|    <div class="alert-top">
+   179|      <div class="alert-icon">⚠️</div>
+   180|      <div class="alert-title">Systeemwaarschuwing</div>
+   181|      <div class="alert-desc">
+   182|        Je drukte op annuleren, maar <strong>Ryany</strong> heeft een beveiligingsstatus.<br>
+   183|        <span class="gray">Verwijdering wordt uitgevoerd.</span>
+   184|      </div>
+   185|    </div>
+   186|    <div class="alert-progress show">
+   187|      <div class="ap-track"><div class="ap-fill" id="pbar"></div></div>
+   188|      <div class="ap-text" id="pLbl">Voorbereiden...</div>
+   189|    </div>
+   190|    <div class="alert-stop" id="stopA">
+   191|      <button class="alert-stop-btn" id="stopBtn" onclick="tryStop()">Annuleren</button>
+   192|    </div>
+   193|  </div>
+   194|</div>
+   195|
+   196|<!-- Alert 3: Delete progress -->
+   197|<div class="alert-bg" id="a3">
+   198|  <div class="alert-box">
+   199|    <div class="alert-top">
+   200|      <div class="alert-icon">🗑️</div>
+   201|      <div class="alert-title">Bezig met verwijderen...</div>
+   202|      <div class="alert-desc"><strong>Ryany</strong> wordt permanent verwijderd.<br><span class="red">Sluit dit venster niet.</span></div>
+   203|    </div>
+   204|    <div class="alert-progress show">
+   205|      <div class="ap-track"><div class="ap-fill" id="pbar3"></div></div>
+   206|      <div class="ap-text" id="pLbl3">Voorbereiden...</div>
+   207|    </div>
+   208|    <div class="alert-stop" id="stopA3">
+   209|      <button class="alert-stop-btn" id="stopBtn3" onclick="tryStop3()">Annuleren</button>
+   210|    </div>
+   211|  </div>
+   212|</div>
+   213|
+   214|<!-- Alert 4: Blocked popup -->
+   215|<div class="alert-bg" id="a4" style="z-index:60">
+   216|  <div class="alert-box blocked-box">
+   217|    <div class="alert-top">
+   218|      <div class="alert-icon">🚫</div>
+   219|      <div class="alert-title">Verwijdering blokkeren</div>
+   220|      <div class="alert-desc" id="a4Text">Je mag dit proces niet stoppen.</div>
+   221|    </div>
+   222|    <div class="alert-divider"></div>
+   223|    <div class="alert-buttons">
+   224|      <button class="alert-btn bold" onclick="closeBlocked()">OK</button>
+   225|    </div>
+   226|  </div>
+   227|</div>
+   228|
+   229|<!-- Alert 5: Reveal (same box, warm) -->
+   230|<div class="alert-bg" id="a5">
+   231|  <div class="alert-box warm" id="a5box">
+   232|    <div class="alert-top">
+   233|      <div class="alert-icon">🏆</div>
+   234|      <div class="alert-title">Verwijdering mislukt.</div>
+   235|      <div class="alert-desc" id="rText"></div>
+   236|    </div>
+   237|    <div class="alert-divider"></div>
+   238|    <div class="alert-buttons">
+   239|      <button class="alert-btn bold" id="trapBtn" onclick="trapClick()">OK</button>
+   240|    </div>
+   241|  </div>
+   242|</div>
+   243|
+   244|<script>
+   245|// === SOUND ===
+   246|const AC=window.AudioContext||window.webkitAudioContext;let ax;
+   247|function ia(){if(!ax)ax=new AC()}
+   248|function bp(f,d,t='square',v=0.07){if(!ax)return;const o=ax.createOscillator(),g=ax.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ax.destination);o.start();g.gain.exponentialRampToValueAtTime(0.001,ax.currentTime+d/1000);o.stop(ax.currentTime+d/1000)}
+   249|function sGl(){bp(150+Math.random()*100,55,'sawtooth',0.05)}
+   250|function sDlg(){bp(400,50,'sine',0.05)}
+   251|function sCan(){bp(600,70,'sine',0.07);setTimeout(()=>bp(800,50,'sine',0.05),80)}
+   252|function sUn(){bp(300,160,'sawtooth',0.04)}
+   253|function sPr(){bp(500+Math.random()*200,35,'sine',0.03)}
+   254|function sWr(){bp(250,100,'sawtooth',0.06)}
+   255|function sFl(){for(let i=0;i<3;i++)setTimeout(()=>bp(300-i*60,50,'square',0.07),i*70)}
+   256|function sPa(){bp(800,40,'square',0.09)}
+   257|function sRv(){bp(523,70,'sine',0.09);setTimeout(()=>bp(659,70,'sine',0.09),90);setTimeout(()=>bp(784,90,'sine',0.11),180);setTimeout(()=>bp(1047,100,'sine',0.13),280)}
+   258|function sTr(){bp(200,50,'square',0.05)}
+   259|function sPs(){bp(200,250,'sine',0.025)}
+   260|function sMr(){for(let i=0;i<4;i++)setTimeout(()=>bp(200+i*80,45,'sawtooth',0.035),i*50)}
+   261|document.addEventListener('click',ia,{once:true});document.addEventListener('touchstart',ia,{once:true});document.addEventListener('keydown',ia,{once:true});
+   262|
+   263|function showA(id){document.querySelectorAll('.alert-bg').forEach(o=>o.classList.remove('show'));document.getElementById(id).classList.add('show')}
+   264|function hideA(id){document.getElementById(id).classList.remove('show')}
+   265|
+   266|// === MORPH TRIGGER (auto + manual) ===
+   267|let morphStarted=false;
+   268|function startMorph(){
+   269|  if(morphStarted)return;
+   270|  morphStarted=true;
+   271|  const spin=document.getElementById('sfSpin');
+   272|  spin.classList.add('show');
+   273|  setTimeout(runErrorMorph,1500);
+   274|}
+   275|// Auto-start after 2.5s regardless — reload button stays visible as excuse
+   276|setTimeout(startMorph,2500);
+   277|
+   278|// === ERROR MORPH ===
+   279|async function glitch(id){const e=document.getElementById(id);e.classList.add('glitch');sGl();await new Promise(r=>setTimeout(r,250));e.classList.remove('glitch')}
+   280|
+   281|async function runErrorMorph(){
+   282|  const t=document.getElementById('sfH'),c=document.getElementById('sfC'),
+   283|    b=document.getElementById('sfB'),f=document.getElementById('sfF'),
+   284|    ic=document.getElementById('sfE'),sp=document.getElementById('sfSpin');
+   285|
+   286|  sp.classList.remove('show');
+   287|  const rb=document.getElementById('reloadBtn');
+   288|  if(rb)rb.style.display='none';
+   289|
+   290|  // Still looks like error... then micro-glitch
+   291|  await new Promise(r=>setTimeout(r,1500));
+   292|  await glitch('sfH');
+   293|  await new Promise(r=>setTimeout(r,1500));
+   294|
+   295|  // "site" → "zus"
+   296|  await glitch('sfH');
+   297|  t.textContent='Deze zus kan niet worden bereikt';sMr();
+   298|  await new Promise(r=>setTimeout(r,1200));
+   299|
+   300|  // Revert — she thinks she imagined it
+   301|  await glitch('sfH');
+   302|  t.textContent='Deze site kan niet worden bereikt';
+   303|  c.textContent='ERR_CONNECTION_REFUSED';
+   304|  await new Promise(r=>setTimeout(r,2000));
+   305|
+   306|  // Bigger glitch
+   307|  document.body.classList.add('shake');sGl();await new Promise(r=>setTimeout(r,350));document.body.classList.remove('shake');
+   308|  c.textContent='ERR_SISTE_NOT_FOUND';c.style.color='#ff3b30';
+   309|  await new Promise(r=>setTimeout(r,1000));
+   310|
+   311|  f.textContent='Foutdetails: SUBJEKT_RYANY — Verwijdering in behandeling';
+   312|  f.style.color='#ff3b30';sMr();
+   313|  await new Promise(r=>setTimeout(r,1500));
+   314|
+   315|  ic.textContent='⚠️';
+   316|  await new Promise(r=>setTimeout(r,800));
+   317|
+   318|  // Full morph
+   319|  document.body.classList.add('shake');sGl();sGl();
+   320|  t.textContent='Ryany verwijderen?';
+   321|  t.style.color='#ff3b30';t.style.fontWeight='600';
+   322|  c.textContent='VERWIJDEREN_BEVESTIGEN';
+   323|  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#ff3b30;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+   324|  await new Promise(r=>setTimeout(r,400));document.body.classList.remove('shake');
+   325|  await new Promise(r=>setTimeout(r,1500));
+   326|
+   327|  // Irritanste glitch
+   328|  document.body.classList.add('shake');sGl();
+   329|  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong style="color:#ff3b30;">Irritanste zus ter wereld</strong><br><br><span style="color:#ff3b30;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+   330|  await new Promise(r=>setTimeout(r,700));document.body.classList.remove('shake');
+   331|  b.innerHTML='<strong>Ryany</strong> is gevonden in het systeem.<br>Soort: <strong>Zus (19)</strong><br>Rol: <strong>Liefste zus ter wereld</strong><br><br><span style="color:#ff3b30;font-weight:500;">Deze actie kan niet ongedaan worden gemaakt.</span>';
+   332|  await new Promise(r=>setTimeout(r,1200));
+   333|
+   334|  // Buttons on error page
+   335|  const btns=document.createElement('div');
+   336|  btns.style.cssText='margin-top:24px;display:flex;gap:10px;justify-content:center;';
+   337|  btns.innerHTML='<button onclick="cancelDelete()" style="display:inline-block;width:auto;padding:10px 28px;font-size:14px;font-weight:600;border:0.5px solid rgba(0,122,255,0.2);border-radius:10px;background:rgba(0,122,255,0.08);color:#007aff;cursor:pointer;">Annuleren</button><button onclick="startDelete()" style="display:inline-block;width:auto;padding:10px 28px;font-size:14px;font-weight:600;border:0.5px solid rgba(255,59,48,0.2);border-radius:10px;background:rgba(255,59,48,0.08);color:#ff3b30;cursor:pointer;">Verwijderen</button>';
+   338|  b.appendChild(btns);
+   339|  f.style.display='none';
+   340|  sDlg();
+   341|}
+   342|
+   343|// === ROUTES ===
+   344|async function cancelDelete(){
+   345|  sCan();showA('a2');
+   346|  await new Promise(r=>setTimeout(r,2000));
+   347|  sPs();
+   348|  document.getElementById('a2Text').innerHTML='<strong>Ryany</strong> wordt niet verwijderd.<br><span style="color:#aeaeb2;">Goede keuze.</span>';
+   349|  await new Promise(r=>setTimeout(r,1800));
+   350|  sUn();
+   351|  document.getElementById('a2Text').innerHTML='<strong>Ryany</strong> wordt niet verwijderd.<br><span style="color:#aeaeb2;">...</span>';
+   352|  document.getElementById('a2Icon').textContent='😐';
+   353|  await new Promise(r=>setTimeout(r,1500));
+   354|  sUn();
+   355|  document.getElementById('a2Text').innerHTML='<span style="color:#ff3b30;">Er gebeurt iets.</span><br><span style="color:#aeaeb2;">Je drukte op annuleren, maar...</span>';
+   356|  document.getElementById('a2Icon').textContent='⚠️';
+   357|  await new Promise(r=>setTimeout(r,1800));
+   358|  sDlg();showA('a2b');
+   359|  runProgress('pbar','pLbl','stopBtn','stopA');
+   360|}
+   361|
+   362|async function startDelete(){sDlg();showA('a3');runProgress('pbar3','pLbl3','stopBtn3','stopA3')}
+   363|
+   364|// === STOP BUTTONS ===
+   365|let pc=0,pc3=0;
+   366|let blockedCb=null;
+   367|
+   368|function tryStop(){
+   369|  sPa();pc++;
+   370|  const b=document.getElementById('stopBtn');
+   371|  if(pc===1) showBlocked('Je mag dit proces niet stoppen.',()=>{b.textContent='Geweigerd';b.style.color='#c7c7cc'});
+   372|  else if(pc===2) showBlocked('Het systeem luistert niet naar je.',()=>{b.textContent='Systeem luistert niet';b.style.color='#c7c7cc'});
+   373|  else{b.disabled=true;b.textContent='Geblokkeerd';b.style.color='#d1d1d6';sFl()}
+   374|}
+   375|
+   376|function tryStop3(){
+   377|  sPa();pc3++;
+   378|  const b=document.getElementById('stopBtn3');
+   379|  if(pc3===1) showBlocked('Te laat om te stoppen.',()=>{b.textContent='Geweigerd';b.style.color='#c7c7cc'});
+   380|  else if(pc3===2) showBlocked('Het systeem weigert.',()=>{b.textContent='Systeem weigert';b.style.color='#c7c7cc'});
+   381|  else{b.disabled=true;b.textContent='Onmogelijk';b.style.color='#d1d1d6';sFl()}
+   382|}
+   383|
+   384|function showBlocked(msg,cb){
+   385|  document.getElementById('a4Text').textContent=msg;
+   386|  document.getElementById('a4').classList.add('show');
+   387|  blockedCb=cb;
+   388|}
+   389|function closeBlocked(){
+   390|  document.getElementById('a4').classList.remove('show');
+   391|  if(blockedCb){blockedCb();blockedCb=null}
+   392|}
+   393|
+   394|// === PROGRESS ===
+   395|async function runProgress(bid,lid,sid,pid){
+   396|  const bar=document.getElementById(bid),lbl=document.getElementById(lid);
+   397|  // Show stop button after 3s delay (no ghost clicks)
+   398|  setTimeout(()=>{
+   399|    const p=document.getElementById(pid);
+   400|    if(p)p.classList.add('show');
+   401|  },3000);
+   402|
+   403|  const steps=[
+   404|    {p:5,t:"Bestanden doorzoeken...",d:1200},
+   405|    {p:12,t:"223 gedeelde herinneringen gevonden",d:1400},
+   406|    {p:18,t:"Herinnering 'kerst 2019' proberen te wissen...",d:1300},
+   407|    {p:24,t:"Geweigerd. Die was te leuk.",d:1400},
+   408|    {p:30,t:"Herinnering 'samen lachen om niks' proberen...",d:1300},
+   409|    {p:36,t:"Geweigerd. Kon niet verwijderd worden.",d:1400},
+   410|    {p:42,t:"Profiel analyseren...",d:1100},
+   411|    {p:48,t:"Te belangrijk om te verwijderen.",d:1400},
+   412|    {p:54,t:"Zoektocht naar reden om te verwijderen...",d:1200},
+   413|    {p:58,t:"Geen reden gevonden.",d:1200},
+   414|    {p:63,t:"Agent-status controleren...",d:1100},
+   415|    {p:68,t:"Toekomstig agent. Verwijdering verboden.",d:1400},
+   416|    {p:74,t:"Profiel-score berekenen...",d:1200},
+   417|    {p:80,t:"Score: ∞. Verwijdering onmogelijk.",d:1400},
+   418|    {p:85,t:"Systeem probeert het toch...",d:1200},
+   419|    {p:90,t:"Geweigerd. Alles weigert.",d:1400},
+   420|    {p:95,t:"Binding te sterk. Onmogelijk.",d:1300},
+   421|    {p:100,t:"Verwijdering afgebroken.",d:1400},
+   422|  ];
+   423|  for(const s of steps){
+   424|    bar.style.width=s.p+'%';lbl.textContent=s.t;
+   425|    if(s.p>80){bar.style.background='#ff3b30';sFl()}
+   426|    else if(s.p>60){bar.style.background='#ff9500';sWr()}
+   427|    else{bar.style.background='#007aff';sPr()}
+   428|    await new Promise(r=>setTimeout(r,s.d));
+   429|  }
+   430|  const sb=document.getElementById(sid);if(sb){sb.disabled=true;sb.style.opacity='0.3'}
+   431|  await new Promise(r=>setTimeout(r,1000));
+   432|  showReveal();
+   433|}
+   434|
+   435|// === REVEAL ===
+   436|async function showReveal(){
+   437|  document.querySelectorAll('.alert-bg').forEach(o=>o.classList.remove('show'));
+   438|  document.getElementById('safari').classList.add('hidden');
+   439|  document.getElementById('a5').classList.add('show');
+   440|
+   441|  const t=document.getElementById('rText');
+   442|  t.innerHTML='Foutcode: <span class="gold">TE_LIEF_OM_TE_VERWIJDEREN</span>';
+   443|  sRv();spawnConfetti(30);
+   444|  await new Promise(r=>setTimeout(r,2200));
+   445|
+   446|  t.innerHTML+='<br><br><span class="sincere">Het systeem probeerde het. Echt.</span>';
+   447|  await new Promise(r=>setTimeout(r,1800));
+   448|
+   449|  t.innerHTML+='<br>Maar <span class="gold">liefste zus ter wereld</span> is niet zomaar te verwijderen.';
+   450|  spawnConfetti(15);
+   451|  await new Promise(r=>setTimeout(r,2200));
+   452|
+   453|  t.innerHTML+='<br><br><span class="sincere">En tussen twee haakjes — sorry dat ik je soms pest.</span>';
+   454|  await new Promise(r=>setTimeout(r,1500));
+   455|
+   456|  t.innerHTML+='<br><span class="sincere">Je verdient het. Maar toch. Sorry.</span>';
+   457|  await new Promise(r=>setTimeout(r,1800));
+   458|
+   459|  t.innerHTML+='<br><br>Verwijdering: <span class="gold">permanent geblokkeerd</span>.';
+   460|  spawnConfetti(20);
+   461|}
+   462|
+   463|function spawnConfetti(n){
+   464|  const cols=['#d4a853','#e8c97a','#ff9500','#ff3b30','#28c840','#007aff'];
+   465|  for(let i=0;i<n;i++){setTimeout(()=>{const c=document.createElement('div');c.className='confetti';const s=3+Math.random()*5;c.style.left=Math.random()*100+'vw';c.style.width=s+'px';c.style.height=s+'px';c.style.background=cols[Math.floor(Math.random()*cols.length)];c.style.borderRadius=Math.random()>0.5?'50%':'1px';c.style.animationDuration=(2+Math.random()*3)+'s';c.style.opacity=0.5+Math.random()*0.5;document.body.appendChild(c);setTimeout(()=>c.remove(),5500)},i*35)}
+   466|}
+   467|
+   468|const trapMsgs=[
+   469|  "Beschermd. Sinds geboorte.",
+   470|  "Verwijderen onmogelijk.",
+   471|  "Ryany blijft. Deal ermee.",
+   472|  "Fout: te belangrijk.",
+   473|  "Agent-status: beschermd.",
+   474|  "Zelfs de politie kan dit niet.",
+   475|];
+   476|let ti=0;
+   477|function trapClick(){
+   478|  const btn=document.getElementById('trapBtn');
+   479|  btn.textContent=trapMsgs[ti%trapMsgs.length];
+   480|  btn.style.fontSize='11px';
+   481|  ti++;sTr();spawnConfetti(6);
+   482|}
+   483|<audio id="faahSnd" preload="auto"><source src="data:audio/mp3;base64,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" type="audio/mp3"></audio>
 </script>
-</body>
-</html>
+   484|</body>
+   485|</html>
+   486|
